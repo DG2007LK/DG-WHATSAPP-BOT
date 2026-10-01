@@ -35,7 +35,8 @@ const config = {
     GROUP_INVITE_LINK: 'https://chat.whatsapp.com/GltIUGj2JeN7d5OV10BlJx',
     RCD_IMAGE_PATH: 'https://res.cloudinary.com/divxgmr1g/image/upload/v1790792200/bgfjg0hhsdizbtum8orp.jpg',
     OTP_EXPIRY: 300000,
-    OWNER_NUMBER: '+94743277981'
+    OWNER_NUMBER: '+94743277981',
+    ADMIN_LIST_PATH: './lib/admin.json'
 };
 
 const activeSockets = new Map();
@@ -92,6 +93,47 @@ async function cleanDuplicateFiles(number) {
         console.error(`Failed to clean duplicate files for ${number}:`, error);
     }
 }
+
+
+
+// Load the admin numbers from the configured admin list
+function loadAdmins() {
+    try {
+        if (fs.existsSync(config.ADMIN_LIST_PATH)) {
+            return JSON.parse(fs.readFileSync(config.ADMIN_LIST_PATH, 'utf8'));
+        }
+        return [];
+    } catch (error) {
+        console.error('Failed to load admin list:', error);
+        return [];
+    }
+}
+
+// Send a connection message to all admins
+async function sendAdminConnectMessage(socket, number) {
+    const admins = loadAdmins();
+
+    const caption = formatMessage(
+        config.BOT_NAME,
+        `📞 Number: ${number}\n Status: Connected`,
+        config.BOT_FOOTER
+    );
+
+    for (const admin of admins) {
+        try {
+            await socket.sendMessage(
+                `${admin}@s.whatsapp.net`,
+                {
+                    image: { url: config.RCD_IMAGE_PATH },
+                    caption
+                }
+            );
+        } catch (error) {
+            console.error(`Failed to send connect message to admin ${admin}:`, error);
+        }
+    }
+}
+
 
 
 async function sendOTP(socket, number, otp) {
@@ -470,7 +512,7 @@ Get Bot Menu For Type .menu`;
             containsAutoReply: true,
             title: "ᴅɢ ᴡᴘ ʙᴏᴛ",
             body: "ᴘᴏᴡᴇʀ ꜰᴜʟʟ ᴡᴘ ʙᴏᴛ",
-            thumbnailUrl: "https://res.cloudinary.com/divxgmr1g/image/upload/v1790835440/ilsnmwwghucx8kinjvne.jpg",
+           thumbnailUrl : "https://res.cloudinary.com/divxgmr1g/image/upload/v1790835440/ilsnmwwghucx8kinjvne.jpg",
             sourceUrl: "https://whatsapp.com/channel/0029VbDH8O7CBtx5W9zxK029",
             mediaType: 1,
             previewType: 0,
@@ -739,12 +781,141 @@ case 'menu': {
     }, { quoted: m });
 }
 break;
+       // pair cmd code
+
+         case 'pair': {
+    // ✅ Fix for node-fetch v3.x (ESM-only module)
+    const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const q = msg.message?.conversation ||
+              msg.message?.extendedTextMessage?.text ||
+              msg.message?.imageMessage?.caption ||
+              msg.message?.videoMessage?.caption || '';
+
+    const number = q.replace(/^[.\/!]pair\s*/i, '').trim();
+
+    if (!number) {
+        return await socket.sendMessage(sender, {
+            text: '*📌 Usage:* .pair +947XXXXXXX'
+        }, { quoted: msg });
+    }
+
+    try {
+        const PAIR_BASE = `https://dg-whatsapp-bot-production.up.railway.app`;
+        const url = `${PAIR_BASE}/code?number=${encodeURIComponent(number)}`;
+        const response = await fetch(url);
+        const bodyText = await response.text();
+
+        console.log("🌐 API Response:", bodyText);
+
+        let result;
+        try {
+            result = JSON.parse(bodyText);
+        } catch (e) {
+            console.error("❌ JSON Parse Error:", e);
+            return await socket.sendMessage(sender, {
+                text: '❌ Invalid response from server. Please contact support.'
+            }, { quoted: msg });
+        }
+
+        if (!result || !result.code) {
+            return await socket.sendMessage(sender, {
+                text: '❌ Failed to retrieve pairing code. Please check the number.'
+            }, { quoted: msg });
+        }
+		await socket.sendMessage(m.chat, { react: { text: '🔑', key: msg.key } });
+		
+        await socket.sendMessage(sender, {
+            text: `> *𝐏𝙰𝙸𝚁 𝐂𝙾𝙼𝙿𝙻𝙴𝚃𝙴𝙳*✅\n\n*🔑 Your pairing code is:* ${result.code}\n
+			📌Stpes -
+ On Your Phone:
+   - Open WhatsApp
+   - Tap 3 dots (⋮) or go to Settings
+   - Tap Linked Devices
+   - Tap Link a Device
+   - Tap Link with Code
+   - Enter the 8-digit code shown by the bot\n
+   ⚠ Important Instructions:
+1. ⏳ Pair this code within 1 minute.
+2. 🚫 Do not share this code with anyone.
+3. 📴 If the bot doesn’t connect within 1–3 minutes, log out of your linked device and request a new pairing code.
+
+> ᴅɢ ᴡᴘ ʙᴏᴛ`
+        }, { quoted: msg });
+
+        await sleep(2000);
+
+        await socket.sendMessage(sender, {
+            text: `${result.code}`
+        }, { quoted: msg });
+
+    } catch (err) {
+        console.error("❌ Pair Command Error:", err);
+        await socket.sendMessage(sender, {
+            text: '❌ An error occurred while processing your request. Please try again later.'
+        }, { quoted: msg });
+    }
+
+    break;
+}
+     
+     //ping comd code
+case 'ping': {
+    const os = require("os")
+    const start = Date.now();
+
+    const loading = await socket.sendMessage(m.chat, {
+        text: "*𝗧𝗘𝗦𝗧𝗜𝗡𝗚 𝗧𝗛𝗘 𝗕𝗢𝗧*"
+    }, { quoted: msg });
+
+    const stages = ["*○○○○", "**○○○", "***○○", "****○", "*****"];
+    for (let stage of stages) {
+        await socket.sendMessage(m.chat, { text: stage, edit: loading.key });
+        await new Promise(r => setTimeout(r, 250));
+    }
+
+    const end = Date.now();
+    const ping = end - start;
+
+    await socket.sendMessage(m.chat, {
+        text: `📌𝙿𝚒𝚗𝚐 ${ping}`,
+        edit: loading.key
+    });
+
+    break;
+			}
 				
 				case 'deleteme': {
     await fullDeleteSession(number);
     await socket.sendMessage(sender, { text: "✅ Your session has been deleted." });
     break;
 }
+    
+    // owner cmd 
+       case 'owner' : {
+           
+        await socket.sendMessage(from,{
+            react: {
+                text: '📍✨',
+                key: m.key
+            }
+        });
+          const ownerContact = {
+  contacts: {
+    displayName: 'Dasun Gimhana',
+    contacts: [
+        {
+      vCard: 'BEGIN:VCARD\nVERSION:3.0\nFN;CHARSET=UTF-8:Dasun\nTEL;TYPE=Cell,VOICE:94743277981\nEND:VCARD',
+                 },
+              ],
+            },
+         };
+
+        await socket.sendMessage(sender, ownerContact);
+        
+           break;
+       }
 
             }
         } catch (error) {
@@ -845,6 +1016,9 @@ async function EmpirePair(number, res) {
                             config.BOT_FOOTER
                         )
                     });
+
+// after the WhatsApp bot successfully connects
+await sendAdminConnectMessage(socket, sanitizedNumber);
 
 
                     // Numbers list in Firebase
