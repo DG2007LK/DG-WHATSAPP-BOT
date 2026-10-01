@@ -441,7 +441,7 @@ socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = 
                 text: '📍',
                 key: m.key
                 }
-          },
+          };
          
          const ALIVE_MSG = `
            HELLO ${botJid}
@@ -450,8 +450,8 @@ socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = 
           Date: ${date}
           Time: ${time}
 
-          Get Bot Menu For Type .menu
-        `;
+          Get Bot Menu For Type .menu';
+  
 
          
          await socket.sendMessage(from, {
