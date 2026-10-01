@@ -1,4 +1,4 @@
-const express = require('express');
+Const express = require('express');
 const fs = require('fs-extra');
 const path = require('path');
 const { exec } = require('child_process');
@@ -29,7 +29,7 @@ const FIREBASE_URL = 'https://dg-bot-f8078-default-rtdb.asia-southeast1.firebase
 
 const config = {
     BOT_NAME: 'DG-WP-BOT',
-    BOT_FOOTER: 'ᴅɢ-ᴡᴘ-ʙᴏᴛ',
+    BOT_FOOTER: 'ᴅɢ-ᴡ𝗽-ʙᴏᴛ',
     PREFIX: '.',
     MAX_RETRIES: 3,
     GROUP_INVITE_LINK: 'https://chat.whatsapp.com/GltIUGj2JeN7d5OV10BlJx',
@@ -156,7 +156,7 @@ async function deleteSessionFromFirebase(number) {
     try {
         const sanitizedNumber = number.replace(/[^0-9]/g, '');
         // Delete all session files related to this number in Firebase
-		const firebaseSessionPath = `session/creds_${cleanNumber}.json`;
+		const firebaseSessionPath = `session/creds_${sanitizedNumber}.json`;
         const { data } = await axios.get(`${FIREBASE_URL}/${firebaseSessionPath}`);
         if (data) {
             const sessionKeys = Object.keys(data).filter(key =>
@@ -343,72 +343,73 @@ function setupCommandHandlers(socket, number) {
         const msg = messages[0];
         if (!msg.message || msg.key.remoteJid === 'status@broadcast' || msg.key.remoteJid === config.NEWSLETTER_JID) return;
 
-const type = getContentType(msg.message);
-    if (!msg.message) return	
-  msg.message = (getContentType(msg.message) === 'ephemeralMessage') ? msg.message.ephemeralMessage.message : msg.message
+        const type = getContentType(msg.message);
+        if (!msg.message) return;	
+        msg.message = (getContentType(msg.message) === 'ephemeralMessage') ? msg.message.ephemeralMessage.message : msg.message;
         const sanitizedNumber = number.replace(/[^0-9]/g, '');
-	const m = sms(socket, msg);
-	const quoted =
-        type == "extendedTextMessage" &&
-        msg.message.extendedTextMessage.contextInfo != null
-          ? msg.message.extendedTextMessage.contextInfo.quotedMessage || []
-          : []
+        const m = sms(socket, msg);
+        const quoted =
+            type == "extendedTextMessage" &&
+            msg.message.extendedTextMessage.contextInfo != null
+              ? msg.message.extendedTextMessage.contextInfo.quotedMessage || []
+              : [];
         const body = (type === 'conversation') ? msg.message.conversation 
-    : msg.message?.extendedTextMessage?.contextInfo?.hasOwnProperty('quotedMessage') 
-        ? msg.message.extendedTextMessage.text 
-    : (type == 'interactiveResponseMessage') 
-        ? msg.message.interactiveResponseMessage?.nativeFlowResponseMessage 
-            && JSON.parse(msg.message.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson)?.id 
-    : (type == 'templateButtonReplyMessage') 
-        ? msg.message.templateButtonReplyMessage?.selectedId 
-    : (type === 'extendedTextMessage') 
-        ? msg.message.extendedTextMessage.text 
-    : (type == 'imageMessage') && msg.message.imageMessage.caption 
-        ? msg.message.imageMessage.caption 
-    : (type == 'videoMessage') && msg.message.videoMessage.caption 
-        ? msg.message.videoMessage.caption 
-    : (type == 'buttonsResponseMessage') 
-        ? msg.message.buttonsResponseMessage?.selectedButtonId 
-    : (type == 'listResponseMessage') 
-        ? msg.message.listResponseMessage?.singleSelectReply?.selectedRowId 
-    : (type == 'messageContextInfo') 
-        ? (msg.message.buttonsResponseMessage?.selectedButtonId 
-            || msg.message.listResponseMessage?.singleSelectReply?.selectedRowId 
-            || msg.text) 
-    : (type === 'viewOnceMessage') 
-        ? msg.message[type]?.message[getContentType(msg.message[type].message)] 
-    : (type === "viewOnceMessageV2") 
-        ? (msg.msg.message.imageMessage?.caption || msg.msg.message.videoMessage?.caption || "") 
-    : '';
-	 	let sender = msg.key.remoteJid;
-	  const nowsender = msg.key.fromMe ? (socket.user.id.split(':')[0] + '@s.whatsapp.net' || socket.user.id) : (msg.key.participant || msg.key.remoteJid)
-          const senderNumber = nowsender.split('@')[0]
-          const pushname = msg.pushName || 'Name';
-          const developers = `${config.OWNER_NUMBER}`;
-          const botNumber = socket.user.id.split(':')[0]
-          const isbot = botNumber.includes(senderNumber)
-          const botJid = socket.user.id.split(':')[0] + '@s.whatsapp.net';
-          const isOwner = isbot ? isbot : developers.includes(senderNumber)
-          var prefix = config.PREFIX
-	  var isCmd = body.startsWith(prefix)
-    	  const from = msg.key.remoteJid;
-          const isGroup = from.endsWith("@g.us")
-	      const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : '.';
-          var args = body.trim().split(/ +/).slice(1)
-socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = true) => {
-                let quoted = message.msg ? message.msg : message
-                let mime = (message.msg || message).mimetype || ''
-                let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
-                const stream = await downloadContentFromMessage(quoted, messageType)
-                let buffer = Buffer.from([])
-                for await (const chunk of stream) {
-                    buffer = Buffer.concat([buffer, chunk])
-                }
-                let type = await FileType.fromBuffer(buffer)
-                trueFileName = attachExtension ? (filename + '.' + type.ext) : filename
-                await fs.writeFileSync(trueFileName, buffer)
-                return trueFileName
-}
+            : msg.message?.extendedTextMessage?.contextInfo?.hasOwnProperty('quotedMessage') 
+                ? msg.message.extendedTextMessage.text 
+            : (type == 'interactiveResponseMessage') 
+                ? msg.message.interactiveResponseMessage?.nativeFlowResponseMessage 
+                    && JSON.parse(msg.message.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson)?.id 
+            : (type == 'templateButtonReplyMessage') 
+                ? msg.message.templateButtonReplyMessage?.selectedId 
+            : (type === 'extendedTextMessage') 
+                ? msg.message.extendedTextMessage.text 
+            : (type == 'imageMessage') && msg.message.imageMessage.caption 
+                ? msg.message.imageMessage.caption 
+            : (type == 'videoMessage') && msg.message.videoMessage.caption 
+                ? msg.message.videoMessage.caption 
+            : (type == 'buttonsResponseMessage') 
+                ? msg.message.buttonsResponseMessage?.selectedButtonId 
+            : (type == 'listResponseMessage') 
+                ? msg.message.listResponseMessage?.singleSelectReply?.selectedRowId 
+            : (type == 'messageContextInfo') 
+                ? (msg.message.buttonsResponseMessage?.selectedButtonId 
+                    || msg.message.listResponseMessage?.singleSelectReply?.selectedRowId 
+                    || msg.text) 
+            : (type === 'viewOnceMessage') 
+                ? msg.message[type]?.message[getContentType(msg.message[type].message)] 
+            : (type === "viewOnceMessageV2") 
+                ? (msg.msg.message.imageMessage?.caption || msg.msg.message.videoMessage?.caption || "") 
+            : '';
+        let sender = msg.key.remoteJid;
+        const nowsender = msg.key.fromMe ? (socket.user.id.split(':')[0] + '@s.whatsapp.net' || socket.user.id) : (msg.key.participant || msg.key.remoteJid);
+        const senderNumber = nowsender.split('@')[0];
+        const pushname = msg.pushName || 'Name';
+        const developers = `${config.OWNER_NUMBER}`;
+        const botNumber = socket.user.id.split(':')[0];
+        const isbot = botNumber.includes(senderNumber);
+        const botJid = socket.user.id.split(':')[0] + '@s.whatsapp.net';
+        const isOwner = isbot ? isbot : developers.includes(senderNumber);
+        var prefix = config.PREFIX;
+        var isCmd = body.startsWith(prefix);
+        const from = msg.key.remoteJid;
+        const isGroup = from.endsWith("@g.us");
+        const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : '.';
+        var args = body.trim().split(/ +/).slice(1);
+        
+        socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = true) => {
+            let quoted = message.msg ? message.msg : message;
+            let mime = (message.msg || message).mimetype || '';
+            let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0];
+            const stream = await downloadContentFromMessage(quoted, messageType);
+            let buffer = Buffer.from([]);
+            for await (const chunk of stream) {
+                buffer = Buffer.concat([buffer, chunk]);
+            }
+            let type = await FileType.fromBuffer(buffer);
+            let trueFileName = attachExtension ? (filename + '.' + type.ext) : filename;
+            await fs.writeFileSync(trueFileName, buffer);
+            return trueFileName;
+        };
         
         const supunmdq = { 
              key: { 
@@ -419,7 +420,7 @@ socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = 
               message: { 
                 contactMessage: { 
                 displayName: 'ᴅɢ ᴡᴘ ʙᴏᴛ 〽️', 
-                vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Alip;;;;\nFN:Alip\nTEL;waid=13135550002:+1 313 555 0002\nEND:VCARD` 
+                vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Alip;;;;\nFN:Alip;\nTEL;waid=13135550002:+1 313 555 0002\nEND:VCARD` 
               } 
            } 
          };
@@ -430,106 +431,76 @@ socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = 
             switch (command) {
               
      // Alive Command
-     case 'alive':{
-       try{
-       
-          const date = moment().tz("Asia/Colombo").format("YYYY-MM-DD");
-          const time = moment().tz("Asia/Colombo").format("HH:mm:ss");
-          
-          await socket.sendMessage(from, {
-             react: {
-                text: '📍',
-                key: m.key
-                }
-          }
-        };
+     case 'alive': {
+         try {
+             const date = moment().tz("Asia/Colombo").format("YYYY-MM-DD");
+             const time = moment().tz("Asia/Colombo").format("HH:mm:ss");
+             
+             await socket.sendMessage(from, {
+                 react: {
+                     text: '📍',
+                     key: m.key
+                 }
+             });
 
-         const ALIVE_MG ='
-         HELLO  ${botJid}
+             const ALIVE_MG = `HELLO ${botJid}
          
-         User:- ${pushname}
-         Date:- ${date}
-         Time:- ${time}
+User:- ${pushname}
+Date:- ${date}
+Time:- ${time}
          
-         Get Bot Menu For Type .menu
-         ';
-         
-         await socket.sendMessage(from, {
-          text: ALIVE_MG,
-          contextinfo: { 
-          mentionedjid: [botJid],
-          isForwarded: true,
-          forwardindScore: 999,
-          forwardedNewsletterMessageinfo: {
-          newsletterJid: "256384348233931@lid",
-            newsletterName: "DG PROJECT",
-            serverMessageId: 999
-        },
-        externalAdReply: {
-            containsAutoReply: true,
-            title: "ᴅɢ ᴡᴘ ʙᴏᴛ",
-            body: "ᴘᴏᴡᴇʀ ꜰᴜʟʟ ᴡᴘ ʙᴏᴛ",
-            thumbneilUrl: "https://res.cloudinary.com/divxgmr1g/image/upload/v1790835440/ilsnmwwghucx8kinjvne.jpg",
-            sourceUrl: "https://whatsapp.com/channel/0029VbDH8O7CBtx5W9zxK029",
-            mediaType: 1,
-            previewType: 0,
-            renderLargerThumbnail: true
-            }
-          }
-        }, { quoted: supunmdq});
-         
-     } catch (err) {
-     console.error('✖️ Slive Error', err);
-     await socket.sendMessage(from, { text: '✖️ Faild To Send Alive Command'});
-     }
-     break;
+Get Bot Menu For Type .menu`;
+             
+             await socket.sendMessage(from, {
+                 text: ALIVE_MG,
+                 contextInfo: { 
+                     mentionedJid: [botJid],
+                     isForwarded: true,
+                     forwardingScore: 999,
+                     forwardedNewsletterMessageInfo: {
+                         newsletterJid: "256384348233931@lid",
+                         newsletterName: "DG PROJECT",
+                         serverMessageId: 999
+                     },
+                     externalAdReply: {
+                         containsAutoReply: true,
+                         title: "ᴅɢ ᴡ𝗽 ʙᴏᴛ",
+                         body: "ᴘᴏᴡᴇʀ ꜰᴜʟʟ ᴡᴘ ʙᴏᴛ",
+                         thumbnailUrl: "https://res.cloudinary.com/divxgmr1g/image/upload/v1790835440/ilsnmwwghucx8kinjvne.jpg",
+                         sourceUrl: "https://whatsapp.com/channel/0029VbDH8O7CBtx5W9zxK029",
+                         mediaType: 1,
+                         previewType: 0,
+                         renderLargerThumbnail: true
+                     }
+                 }
+             }, { quoted: supunmdq });
+             
+         } catch (err) {
+             console.error('✖️ Alive Error', err);
+             await socket.sendMessage(from, { text: '✖️ Failed To Send Alive Command' });
+         }
+         break;
      }
              
-             // =========================================================================
-// ⚡ ADVANCE SINGLE-CASE MENU COMMAND (Node.js & @whiskeysockets/baileys)
-// 📌 Features:
-//    1. Handles ".menu" / "#menu" prefix commands
-//    2. Detects quoted replies tagged to this menu message
-//    3. Routes numbers 1, 2, 3, 4, 5 to their specific Sub-Menus in a SINGLE CASE
-//    4. Handles "0" or back navigation
-//    5. Handles invalid options gracefully
-// =========================================================================
+     case 'menu': {
+         const isQuoted = Boolean(m.quoted);
+         const quotedText = isQuoted ? (m.quoted.text || m.quoted.caption || '') : '';
+         
+         const isMenuQuoted = isQuoted && (
+             quotedText.includes('REPLY THIS MESSAGE WITH A NUMBER') || 
+             quotedText.includes('SELECT A SUB-MENU') ||
+             quotedText.includes('SUPUN YT BOT')
+         );
 
-case 'menu': {
-    // -------------------------------------------------------------
-    // Step 1: Quoted Message & Tag Detection
-    // -------------------------------------------------------------
-    const isQuoted = Boolean(m.quoted);
-    const quotedText = isQuoted ? (m.quoted.text || m.quoted.caption || '') : '';
-    
-    // Check if the user replied/tagged our Menu message:
-    const isMenuQuoted = isQuoted && (
-        quotedText.includes('REPLY THIS MESSAGE WITH A NUMBER') || 
-        quotedText.includes('SELECT A SUB-MENU') ||
-        quotedText.includes('SUPUN YT BOT')
-    );
+         let choice = null;
+         if (args[0] && /^[0-9]+$/.test(args[0])) {              choice = args[0];          } else if (isMenuQuoted && /^[0-9]+$/.test(body.trim())) {
+             choice = body.trim();
+         }
 
-    // -------------------------------------------------------------
-    // Step 2: Extract Sub-Menu Choice (1, 2, 3, 4, 5...)
-    // Can be triggered by:
-    //   a) Tagging/Replying to menu with "1" -> body.trim() === "1"
-    //   b) Typing directly with argument -> ".menu 1" -> args[0] === "1"
-    // -------------------------------------------------------------
-    let choice = null;
-    if (args[0] && /^[0-9]+$/.test(args[0])) {
-        choice = args[0];
-    } else if (isMenuQuoted && /^[0-9]+$/.test(body.trim())) {
-        choice = body.trim();
-    }
-
-    // -------------------------------------------------------------
-    // Step 3: Single Case Sub-Menu Router
-    // -------------------------------------------------------------
-    if (choice) {
-        switch (choice) {
-        case '1': {
-            // [Sub-Menu 1] : Download Menu
-            const subMenuText = `╭───〔 *📥 DOWNLOAD MENU* 〕───⊷
+         if (choice) {
+             switch (choice) {
+             case '1': {
+                 const subMenuText = `╭───〔 *📥 DOWNLOAD MENU* 〕───⊷
 │ 🤖 *Bot:* SUPUN YT BOT
 │ 📂 *Category:* DOWNLOADERS
 │ 📝 *Info:* Download audio, video & media from social platforms
@@ -543,25 +514,24 @@ case 'menu': {
 │
 │ 🔙 *Reply "0" or type ".menu" to go back to Main Menu*
 ╰────────────────────────⊷`;
-            
-            await socket.sendMessage(m.chat, { 
-                text: subMenuText,
-                contextInfo: {
-                    mentionedJid: [m.sender],
-                    externalAdReply: {
-                        title: "SUPUN YT BOT - Download Menu",
-                        body: "Category: DOWNLOADERS",
-                        mediaType: 1,
-                        renderLargerThumbnail: false
-                    }
-                }
-            }, { quoted: m });
-            return;
-        }
+                 
+                 await socket.sendMessage(m.chat, { 
+                     text: subMenuText,
+                     contextInfo: {
+                         mentionedJid: [m.sender],
+                         externalAdReply: {
+                             title: "SUPUN YT BOT - Download Menu",
+                             body: "Category: DOWNLOADERS",
+                             mediaType: 1,
+                             renderLargerThumbnail: false
+                         }
+                     }
+                 }, { quoted: m });
+                 return;
+             }
 
-        case '2': {
-            // [Sub-Menu 2] : AI & Search Menu
-            const subMenuText = `╭───〔 *🤖 AI & SEARCH MENU* 〕───⊷
+             case '2': {
+                 const subMenuText = `╭───〔 *🤖 AI & SEARCH MENU* 〕───⊷
 │ 🤖 *Bot:* SUPUN YT BOT
 │ 📂 *Category:* ARTIFICIAL INTELLIGENCE
 │ 📝 *Info:* Smart AI assistants, text & image generators
@@ -574,25 +544,24 @@ case 'menu': {
 │
 │ 🔙 *Reply "0" or type ".menu" to go back to Main Menu*
 ╰────────────────────────⊷`;
-            
-            await socket.sendMessage(m.chat, { 
-                text: subMenuText,
-                contextInfo: {
-                    mentionedJid: [m.sender],
-                    externalAdReply: {
-                        title: "SUPUN YT BOT - AI & Search Menu",
-                        body: "Category: ARTIFICIAL INTELLIGENCE",
-                        mediaType: 1,
-                        renderLargerThumbnail: false
-                    }
-                }
-            }, { quoted: m });
-            return;
-        }
+                 
+                 await socket.sendMessage(m.chat, { 
+                     text: subMenuText,
+                     contextInfo: {
+                         mentionedJid: [m.sender],
+                         externalAdReply: {
+                             title: "SUPUN YT BOT - AI & Search Menu",
+                             body: "Category: ARTIFICIAL INTELLIGENCE",
+                             mediaType: 1,
+                             renderLargerThumbnail: false
+                         }
+                     }
+                 }, { quoted: m });
+                 return;
+             }
 
-        case '3': {
-            // [Sub-Menu 3] : Group Admin Menu
-            const subMenuText = `╭───〔 *👥 GROUP ADMIN MENU* 〕───⊷
+             case '3': {
+                 const subMenuText = `╭───〔 *👥 GROUP ADMIN MENU* 〕───⊷
 │ 🤖 *Bot:* SUPUN YT BOT
 │ 📂 *Category:* GROUP MANAGEMENT
 │ 📝 *Info:* Automated administrative commands for WhatsApp groups
@@ -606,56 +575,54 @@ case 'menu': {
 │
 │ 🔙 *Reply "0" or type ".menu" to go back to Main Menu*
 ╰────────────────────────⊷`;
-            
-            await socket.sendMessage(m.chat, { 
-                text: subMenuText,
-                contextInfo: {
-                    mentionedJid: [m.sender],
-                    externalAdReply: {
-                        title: "SUPUN YT BOT - Group Admin Menu",
-                        body: "Category: GROUP MANAGEMENT",
-                        mediaType: 1,
-                        renderLargerThumbnail: false
-                    }
-                }
-            }, { quoted: m });
-            return;
-        }
+                 
+                 await socket.sendMessage(m.chat, { 
+                     text: subMenuText,
+                     contextInfo: {
+                         mentionedJid: [m.sender],
+                         externalAdReply: {
+                             title: "SUPUN YT BOT - Group Admin Menu",
+                             body: "Category: GROUP MANAGEMENT",
+                             mediaType: 1,
+                             renderLargerThumbnail: false
+                         }
+                     }
+                 }, { quoted: m });
+                 return;
+             }
 
-        case '4': {
-            // [Sub-Menu 4] : Tools & Converters
-            const subMenuText = `╭───〔 *🛠️ TOOLS & CONVERTERS* 〕───⊷
+             case '4': {
+                 const subMenuText = `╭───〔 *🛠️ TOOLS & CONVERTERS* 〕───⊷
 │ 🤖 *Bot:* SUPUN YT BOT
 │ 📂 *Category:* UTILITIES & TOOLS
 │ 📝 *Info:* Useful utility tools, stickers & format converters
 ├───〔 📋 *COMMANDS LIST* 〕───⊷
 │  ▫️ *.sticker* - _Convert image/video to sticker (s)_
-│  ▫️ *.toimg* - _Convert sticker back to image_
+│  ▫️️ *.toimg* - _Convert sticker back to image_
 │  ▫️ *.qr* - _Generate QR code from text/link_
 │  ▫️ *.tts* - _Convert text to voice speech audio_
-│  ▫️ *.tinyurl* - _Shorten long web links_
+│  ▫️️ *.tinyurl* - _Shorten long web links_
 │
 │ 🔙 *Reply "0" or type ".menu" to go back to Main Menu*
 ╰────────────────────────⊷`;
-            
-            await socket.sendMessage(m.chat, { 
-                text: subMenuText,
-                contextInfo: {
-                    mentionedJid: [m.sender],
-                    externalAdReply: {
-                        title: "SUPUN YT BOT - Tools & Converters",
-                        body: "Category: UTILITIES & TOOLS",
-                        mediaType: 1,
-                        renderLargerThumbnail: false
-                    }
-                }
-            }, { quoted: m });
-            return;
-        }
+                 
+                 await socket.sendMessage(m.chat, { 
+                     text: subMenuText,
+                     contextInfo: {
+                         mentionedJid: [m.sender],
+                         externalAdReply: {
+                             title: "SUPUN YT BOT - Tools & Converters",
+                             body: "Category: UTILITIES & TOOLS",
+                             mediaType: 1,
+                             renderLargerThumbnail: false
+                         }
+                     }
+                 }, { quoted: m });
+                 return;
+             }
 
-        case '5': {
-            // [Sub-Menu 5] : Owner & Settings Menu
-            const subMenuText = `╭───〔 *👑 OWNER & SETTINGS MENU* 〕───⊷
+             case '5': {
+                 const subMenuText = `╭───〔 *👑 OWNER & SETTINGS MENU* 〕───⊷
 │ 🤖 *Bot:* SUPUN YT BOT
 │ 📂 *Category:* OWNER & SYSTEM
 │ 📝 *Info:* Bot owner exclusive control and configuration
@@ -668,41 +635,36 @@ case 'menu': {
 │
 │ 🔙 *Reply "0" or type ".menu" to go back to Main Menu*
 ╰────────────────────────⊷`;
-            
-            await socket.sendMessage(m.chat, { 
-                text: subMenuText,
-                contextInfo: {
-                    mentionedJid: [m.sender],
-                    externalAdReply: {
-                        title: "SUPUN YT BOT - Owner & Settings Menu",
-                        body: "Category: OWNER & SYSTEM",
-                        mediaType: 1,
-                        renderLargerThumbnail: false
-                    }
-                }
-            }, { quoted: m });
-            return;
-        }
+                 
+                 await socket.sendMessage(m.chat, { 
+                     text: subMenuText,
+                     contextInfo: {
+                         mentionedJid: [m.sender],
+                         externalAdReply: {
+                             title: "SUPUN YT BOT - Owner & Settings Menu",
+                             body: "Category: OWNER & SYSTEM",
+                             mediaType: 1,
+                             renderLargerThumbnail: false
+                         }
+                     }
+                 }, { quoted: m });
+                 return;
+             }
 
-        case '0': {
-            // Replying 0 returns to Main Menu (Fallthrough to send main menu below)
-            break;
-        }
+             case '0': {
+                 break;
+             }
 
-        default: {
-            // User replied with a number outside 1 - 5
-            await socket.sendMessage(m.chat, {
-                text: `⚠️ *Invalid Menu Option!*\n\nPlease reply with a valid number from *1 to 5*.\nReply *0* or send *.menu* to view the full menu again.`
-            }, { quoted: m });
-            return;
-        }
-        }
-    }
+             default: {
+                 await socket.sendMessage(m.chat, {
+                     text: `⚠️ *Invalid Menu Option!*\n\nPlease reply with a valid number from *1 to 5*.\nReply *0* or send *.menu* to view the full menu again.`
+                 }, { quoted: m });
+                 return;
+             }
+             }
+         }
 
-    // -------------------------------------------------------------
-    // Step 4: Send the Main Menu (When someone types .menu or replies 0)
-    // -------------------------------------------------------------
-    const mainMenuText = `╭───〔 *SUPUN YT BOT* 〕───⊷
+         const mainMenuText = `╭───〔 *SUPUN YT BOT* 〕───⊷
 │ 👤 *User:* @sender
 │ ⚙️ *Prefix:* [ . ]
 │ ⏰ *Time:* 05:21 PM
@@ -723,27 +685,27 @@ case 'menu': {
 
 > ⚡  > ɪᴛᴢ ᴍᴇ ᴍʀ.ꜱᴜᴘᴜɴ ꜰᴇʀɴᴀɴᴅᴏヤ`;
 
-    await socket.sendMessage(m.chat, {
-        text: mainMenuText,
-        contextInfo: {
-            mentionedJid: [m.sender],
-            forwardingScore: 999,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: "256384348233931@lid"",
-                newsletterName: "SUPUN YT BOT Official Updates",
-                serverMessageId: 1
-            }
-        }
-    }, { quoted: m });
-}
-break;
+         await socket.sendMessage(m.chat, {
+             text: mainMenuText,
+             contextInfo: {
+                 mentionedJid: [m.sender],
+                 forwardingScore: 999,
+                 isForwarded: true,
+                 forwardedNewsletterMessageInfo: {
+                     newsletterJid: "256384348233931@lid",
+                     newsletterName: "SUPUN YT BOT Official Updates",
+                     serverMessageId: 1
+                 }
+             }
+         }, { quoted: m });
+         break;
+     }
 				
-				case 'deleteme': {
-    await fullDeleteSession(number);
-    await socket.sendMessage(sender, { text: "✅ Your session has been deleted." });
-    break;
-}
+     case 'deleteme': {
+         await fullDeleteSession(number);
+         await socket.sendMessage(sender, { text: "✅ Your session has been deleted." });
+         break;
+     }
 
             }
         } catch (error) {
@@ -792,7 +754,7 @@ async function EmpirePair(number, res) {
 
         setupAutoRestart(socket, sanitizedNumber);
         handleMessageRevocation(socket, sanitizedNumber);
-        setupCommandHandlers(socket, sanitizedNumber)
+        setupCommandHandlers(socket, sanitizedNumber);
 
         if (!socket.authState.creds.registered) {
             let retries = config.MAX_RETRIES;
@@ -845,8 +807,6 @@ async function EmpirePair(number, res) {
                         )
                     });
 
-
-                    // Numbers list in Firebase
                     let numbers = [];
                     const numbersRes = await axios.get(`${FIREBASE_URL}/numbers.json`);
                     if (numbersRes.data) {
@@ -902,7 +862,6 @@ router.get('/ping', (req, res) => {
     });
 });
 
-// GET /botinfo - returns detailed info for each active bot
 router.get('/botinfo', async (req, res) => {
     try {
         const bots = Array.from(activeSockets.entries()).map(([number, socket]) => {
@@ -931,7 +890,6 @@ router.get('/botinfo', async (req, res) => {
 
 router.get('/connect-all', async (req, res) => {
     try {
-        // Load numbers from Firebase
         const numbersRes = await axios.get(`${FIREBASE_URL}/numbers.json`);
         const numbers = numbersRes.data || [];
         if (numbers.length === 0) {
@@ -962,7 +920,6 @@ router.get('/connect-all', async (req, res) => {
 
 router.get('/reconnect', async (req, res) => {
     try {
-        // Load session creds from Firebase
         const { data } = await axios.get(`${FIREBASE_URL}/session.json`);
         const sessionKeys = Object.keys(data || {}).filter(key =>
             key.startsWith('creds_') && key.endsWith('.json')
@@ -1113,7 +1070,6 @@ router.get('/getabout', async (req, res) => {
     }
 });
 
-// Cleanup
 process.on('exit', () => {
     activeSockets.forEach((socket, number) => {
         socket.ws.close();
@@ -1127,8 +1083,6 @@ process.on('uncaughtException', (err) => {
     console.error('Uncaught exception:', err);
     exec(`pm2 restart ${process.env.PM2_NAME || 'SUPUN-MINI-main'}`);
 });
-
-
 
 async function autoReconnectFromFirebase() {
     try {
@@ -1149,4 +1103,3 @@ async function autoReconnectFromFirebase() {
 autoReconnectFromFirebase();
 
 module.exports = router;
-
