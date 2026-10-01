@@ -441,7 +441,7 @@ socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = 
                 text: '📍',
                 key: m.key
                 }
-          };
+          },
          
          const ALIVE_MSG = `
            HELLO ${botJid}
