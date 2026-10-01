@@ -456,7 +456,7 @@ Get Bot Menu For Type .menu`;
 
          
          await socket.sendMessage(from, {
-          text: ALIVE_MG,
+          text: ALIVE_MSG,
           contextinfo: { 
           mentionedjid: botJid,
           isForwarded: true,
