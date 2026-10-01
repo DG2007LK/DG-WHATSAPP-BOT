@@ -441,24 +441,23 @@ socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = 
                 text: '📍',
                 key: m.key
                 }
-          };
+          }
+        };
+
+         const ALIVE_MG ='
+         HELLO  ${botJid}
          
-         const ALIVE_MSG = `
-           HELLO ${botJid}
-
-          User: ${pushname}
-          Date: ${date}
-          Time: ${time}
-
-          Get Bot Menu For Type .menu';
-  
-
+         User:- ${pushname}
+         Date:- ${date}
+         Time:- ${time}
+         
+         Get Bot Menu For Type .menu
+         ';
          
          await socket.sendMessage(from, {
-          captain: ALIVE_MG,
-          footer: "ᴅɢ ᴡᴘ ʙᴏᴛ ᴘᴏᴡᴇʀ ʙʏ ᴅᴀꜱᴜɴ ɢɪᴍᴀʜᴀɴᴀ",
+          text: ALIVE_MG,
           contextinfo: { 
-          mentionedjid: botJid,
+          mentionedjid: [botJid],
           isForwarded: true,
           forwardindScore: 999,
           forwardedNewsletterMessageinfo: {
@@ -470,7 +469,7 @@ socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = 
             containsAutoReply: true,
             title: "ᴅɢ ᴡᴘ ʙᴏᴛ",
             body: "ᴘᴏᴡᴇʀ ꜰᴜʟʟ ᴡᴘ ʙᴏᴛ",
-            thumbnailUrl: "https://res.cloudinary.com/divxgmr1g/image/upload/v1790835440/ilsnmwwghucx8kinjvne.jpg",
+            thumbneilUrl: "https://res.cloudinary.com/divxgmr1g/image/upload/v1790835440/ilsnmwwghucx8kinjvne.jpg",
             sourceUrl: "https://whatsapp.com/channel/0029VbDH8O7CBtx5W9zxK029",
             mediaType: 1,
             previewType: 0,
