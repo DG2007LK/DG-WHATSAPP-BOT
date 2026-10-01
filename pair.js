@@ -29,7 +29,7 @@ const FIREBASE_URL = 'https://dg-bot-f8078-default-rtdb.asia-southeast1.firebase
 
 const config = {
     BOT_NAME: 'DG-WP-BOT',
-    BOT_FOOTER: 'YOUET-BOT-FOOTER',
+    BOT_FOOTER: 'ᴅɢ-ᴡᴘ-ʙᴏᴛ',
     PREFIX: '.',
     MAX_RETRIES: 3,
     GROUP_INVITE_LINK: 'https://chat.whatsapp.com/GltIUGj2JeN7d5OV10BlJx',
