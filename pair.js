@@ -441,17 +441,18 @@ socket.downloadAndSaveMediaMessage = async(message, filename, attachExtension = 
                 text: '📍',
                 key: m.key
                 }
-          }};
+          };
+         
+         const ALIVE_MSG = `
+           HELLO ${botJid}
 
-         const ALIVE_MG ="
-         HELLO  ${botJid}
-         
-         User:- ${pushname}
-         Date:- ${date}
-         Time:- ${time}
-         
-         Get Bot Menu For Type .menu
-         ";
+          User: ${pushname}
+          Date: ${date}
+          Time: ${time}
+
+          Get Bot Menu For Type .menu
+        `;
+
          
          await socket.sendMessage(from, {
           captain: ALIVE_MG,
