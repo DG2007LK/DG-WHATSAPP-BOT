@@ -1,908 +1,1297 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>DG WHATSAPP BOT</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>DG WHATSAPP BOT</title>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    /* =========================================================
+    <style>
+      /* =========================================================
        THEME TOKENS — DISAN RED / DARK LOOK
     ========================================================= */
-    :root{
-      --bg:#0a0407;
-      --bg2:#1a0509;
-      --card:rgba(255,255,255,0.045);
-      --card-solid:#160508;
-      --input-bg:rgba(255,255,255,0.04);
-      --text:#ffeef0;
-      --muted:#b08b91;
-      --accent:#ff2e4d;
-      --accent2:#c9184a;
-      --border:rgba(255,46,77,0.25);
-      --shadow:0 6px 24px rgba(0,0,0,.45);
-      --danger:#ff5c7a;
-      --warn:#ffb648;
-      --success:#25d366;
-    }
-    body.light{
-      --bg:#fff5f6;
-      --bg2:#ffffff;
-      --card:rgba(255,255,255,0.9);
-      --card-solid:#ffffff;
-      --input-bg:rgba(80,10,25,0.04);
-      --text:#2a0a10;
-      --muted:#8a5a62;
-      --accent:#e63946;
-      --accent2:#c9184a;
-      --border:rgba(230,57,70,0.25);
-      --shadow:0 6px 20px rgba(140,20,40,.14);
-      --danger:#c9184a;
-      --warn:#d98200;
-      --success:#1c9e4b;
-    }
+      :root {
+        --bg: #0a0407;
+        --bg2: #1a0509;
+        --card: rgba(255, 255, 255, 0.045);
+        --card-solid: #160508;
+        --input-bg: rgba(255, 255, 255, 0.04);
+        --text: #ffeef0;
+        --muted: #b08b91;
+        --accent: #ff2e4d;
+        --accent2: #c9184a;
+        --border: rgba(255, 46, 77, 0.25);
+        --shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+        --danger: #ff5c7a;
+        --warn: #ffb648;
+        --success: #25d366;
+      }
+      body.light {
+        --bg: #fff5f6;
+        --bg2: #ffffff;
+        --card: rgba(255, 255, 255, 0.9);
+        --card-solid: #ffffff;
+        --input-bg: rgba(80, 10, 25, 0.04);
+        --text: #2a0a10;
+        --muted: #8a5a62;
+        --accent: #e63946;
+        --accent2: #c9184a;
+        --border: rgba(230, 57, 70, 0.25);
+        --shadow: 0 6px 20px rgba(140, 20, 40, 0.14);
+        --danger: #c9184a;
+        --warn: #d98200;
+        --success: #1c9e4b;
+      }
 
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    html,body{height:100%;}
-    html{-webkit-text-size-adjust:100%;}
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
 
-    /* =========================================================
+      /* =========================================================
        BODY — dark red radial gradients
     ========================================================= */
-    body{
-      margin:0;
-      font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
-      background-color:var(--bg);
-      background-image:
-        radial-gradient(700px 400px at 12% -8%, rgba(255,46,77,.22), transparent 65%),
-        radial-gradient(650px 400px at 92% 105%, rgba(201,24,74,.22), transparent 65%),
-        radial-gradient(500px 320px at 78% 40%, rgba(255,94,58,.09), transparent 70%);
-      background-attachment:fixed;
-      color:var(--text);
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      min-height:100vh;
-      padding:22px 16px 44px;
-      overflow-x:hidden;
-      transition:background-color .3s ease, color .3s ease;
-    }
-    body.light{
-      background-image:
-        radial-gradient(700px 400px at 12% -8%, rgba(230,57,70,.14), transparent 65%),
-        radial-gradient(650px 400px at 92% 105%, rgba(201,24,74,.14), transparent 65%),
-        radial-gradient(500px 320px at 78% 40%, rgba(255,94,58,.08), transparent 70%);
-    }
+      body {
+        margin: 0;
+        font-family:
+          'Poppins',
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(700px 400px at 12% -8%, rgba(255, 46, 77, 0.22), transparent 65%),
+          radial-gradient(650px 400px at 92% 105%, rgba(201, 24, 74, 0.22), transparent 65%),
+          radial-gradient(500px 320px at 78% 40%, rgba(255, 94, 58, 0.09), transparent 70%);
+        background-attachment: fixed;
+        color: var(--text);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 22px 16px 44px;
+        overflow-x: hidden;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+      }
+      body.light {
+        background-image:
+          radial-gradient(700px 400px at 12% -8%, rgba(230, 57, 70, 0.14), transparent 65%),
+          radial-gradient(650px 400px at 92% 105%, rgba(201, 24, 74, 0.14), transparent 65%),
+          radial-gradient(500px 320px at 78% 40%, rgba(255, 94, 58, 0.08), transparent 70%);
+      }
 
-    /* =========================================================
+      /* =========================================================
        VIEWS
     ========================================================= */
-    .view{
-      display:none;
-      width:100%;
-      max-width:460px;
-      flex-direction:column;
-      gap:16px;
-      animation:fadeUp .35s ease both;
-    }
-    .view.active{display:flex;}
-    @keyframes fadeUp{
-      from{opacity:0;transform:translate3d(0,12px,0);}
-      to{opacity:1;transform:translate3d(0,0,0);}
-    }
+      .view {
+        display: none;
+        width: 100%;
+        max-width: 460px;
+        flex-direction: column;
+        gap: 16px;
+        animation: fadeUp 0.35s ease both;
+      }
+      .view.active {
+        display: flex;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 12px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
 
-    /* =========================================================
+      /* =========================================================
        TOP BAR
     ========================================================= */
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-    .brand{
-      font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:1.5px;
-      color:var(--accent);display:flex;align-items:center;gap:8px;font-size:14px;
-    }
-    .icon-btn{
-      width:42px;height:42px;border-radius:13px;
-      border:1px solid var(--border);
-      background:var(--card);
-      color:var(--text);
-      cursor:pointer;display:grid;place-items:center;font-size:16px;
-      transition:transform .2s ease, color .2s ease, border-color .2s ease;
-    }
-    .icon-btn:hover{color:var(--accent);border-color:var(--accent);transform:translate3d(0,-2px,0);}
-    .icon-btn:active{transform:scale(.94);}
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .brand {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+      .icon-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        font-size: 16px;
+        transition:
+          transform 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .icon-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        transform: translate3d(0, -2px, 0);
+      }
+      .icon-btn:active {
+        transform: scale(0.94);
+      }
 
-    /* =========================================================
+      /* =========================================================
        HERO AVATAR (logo)
     ========================================================= */
-    .hero-avatar{
-      position:relative;
-      width:96px;height:96px;
-      margin:2px auto -6px;
-      display:grid;place-items:center;
-    }
-    .hero-avatar::before{
-      content:"";
-      position:absolute;inset:-4px;border-radius:50%;
-      background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent));
-      animation:pulseRing 3s ease-in-out infinite;
-      will-change:opacity,transform;
-    }
-    body.light .hero-avatar::after{
-      background:#fff;
-    }
-    .hero-avatar::after{
-      content:"";
-      position:absolute;inset:0;border-radius:50%;
-      background:var(--bg);
-      z-index:1;
-    }
-    .hero-avatar img{
-      position:relative;z-index:2;
-      width:86px;height:86px;border-radius:50%;
-      object-fit:cover;
-      border:2px solid rgba(255,46,77,.45);
-      box-shadow:0 0 18px rgba(255,46,77,.35);
-    }
-    @keyframes pulseRing{
-      0%,100%{opacity:.9;transform:scale(1);}
-      50%{opacity:1;transform:scale(1.06);}
-    }
+      .hero-avatar {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin: 2px auto -6px;
+        display: grid;
+        place-items: center;
+      }
+      .hero-avatar::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent));
+        animation: pulseRing 3s ease-in-out infinite;
+        will-change: opacity, transform;
+      }
+      body.light .hero-avatar::after {
+        background: #fff;
+      }
+      .hero-avatar::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--bg);
+        z-index: 1;
+      }
+      .hero-avatar img {
+        position: relative;
+        z-index: 2;
+        width: 86px;
+        height: 86px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 46, 77, 0.45);
+        box-shadow: 0 0 18px rgba(255, 46, 77, 0.35);
+      }
+      @keyframes pulseRing {
+        0%,
+        100% {
+          opacity: 0.9;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.06);
+        }
+      }
 
-    /* =========================================================
+      /* =========================================================
        TITLE
     ========================================================= */
-    .title{
-      font-family:'Orbitron',sans-serif;
-      font-size:clamp(21px,6.2vw,30px);
-      font-weight:800;
-      text-align:center;
-      margin:6px 0 0;
-      letter-spacing:2px;
-      background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));
-      background-size:220% auto;
-      -webkit-background-clip:text;background-clip:text;
-      color:transparent;
-      animation:shine 5s linear infinite;
-    }
-    @keyframes shine{to{background-position:220% center;}}
+      .title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: clamp(21px, 6.2vw, 30px);
+        font-weight: 800;
+        text-align: center;
+        margin: 6px 0 0;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+        background-size: 220% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: shine 5s linear infinite;
+      }
+      @keyframes shine {
+        to {
+          background-position: 220% center;
+        }
+      }
 
-    .subtitle{
-      text-align:center;margin:-6px 0 0;font-size:12.5px;
-      letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);
-    }
+      .subtitle {
+        text-align: center;
+        margin: -6px 0 0;
+        font-size: 12.5px;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
 
-    /* =========================================================
+      /* =========================================================
        VIDEO — ORIGINAL SIZE (natural aspect, max-height 440px)
     ========================================================= */
-    .video-card{
-      position:relative;border-radius:20px;overflow:hidden;
-      border:1px solid var(--border);
-      background:#000;
-      box-shadow:var(--shadow);
-    }
-    .video-card video{
-      display:block;width:100%;height:auto;
-      max-height:440px;
-      object-fit:cover;
-      background:#000;
-      transform:translateZ(0);
-    }
-    .video-badge{
-      position:absolute;top:10px;left:10px;
-      display:flex;align-items:center;gap:6px;
-      padding:6px 12px;border-radius:20px;
-      background:rgba(0,0,0,.6);color:#fff;
-      font-size:10.5px;font-weight:600;letter-spacing:1px;
-      border:1px solid rgba(255,46,77,.4);
-    }
-    .video-badge i{color:#ff2e4d;font-size:8px;animation:pulseDot 1.6s ease infinite;}
-    @keyframes pulseDot{50%{opacity:.3;}}
-    .sound-btn{
-      position:absolute;right:10px;bottom:10px;
-      display:flex;align-items:center;gap:7px;
-      padding:9px 15px;border-radius:30px;
-      border:1px solid rgba(255,255,255,.22);
-      background:rgba(0,0,0,.65);color:#fff;
-      font-family:inherit;font-size:12px;font-weight:600;
-      cursor:pointer;transition:transform .2s ease, background .2s ease, color .2s ease;
-    }
-    .sound-btn:hover,.sound-btn.on{
-      background:var(--accent);color:#1a0004;border-color:transparent;
-    }
-    .sound-btn:active{transform:scale(.95);}
+      .video-card {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #000;
+        box-shadow: var(--shadow);
+      }
+      .video-card video {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 440px;
+        object-fit: cover;
+        background: #000;
+        transform: translateZ(0);
+      }
+      .video-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        border: 1px solid rgba(255, 46, 77, 0.4);
+      }
+      .video-badge i {
+        color: #ff2e4d;
+        font-size: 8px;
+        animation: pulseDot 1.6s ease infinite;
+      }
+      @keyframes pulseDot {
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .sound-btn {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 15px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(0, 0, 0, 0.65);
+        color: #fff;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .sound-btn:hover,
+      .sound-btn.on {
+        background: var(--accent);
+        color: #1a0004;
+        border-color: transparent;
+      }
+      .sound-btn:active {
+        transform: scale(0.95);
+      }
 
-    /* =========================================================
+      /* =========================================================
        CARD
     ========================================================= */
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:20px;
-      padding:18px;
-      box-shadow:var(--shadow);
-      transition:background .3s ease, border-color .3s ease;
-    }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
 
-    /* =========================================================
+      /* =========================================================
        BUTTONS
     ========================================================= */
-    .btn{
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      width:100%;padding:15px 18px;border-radius:15px;border:none;
-      font-family:inherit;font-size:14.5px;font-weight:600;letter-spacing:.6px;
-      cursor:pointer;text-decoration:none;
-      transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .btn i{font-size:16px;}
-    .btn.primary{
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#fff;
-      box-shadow:0 6px 18px rgba(255,46,77,.35);
-    }
-    .btn.primary:hover{transform:translate3d(0,-2px,0);box-shadow:0 10px 26px rgba(255,46,77,.5);}
-    .btn.primary:active{transform:translate3d(0,0,0) scale(.98);}
-    .btn.primary:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+      .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 15px 18px;
+        border-radius: 15px;
+        border: none;
+        font-family: inherit;
+        font-size: 14.5px;
+        font-weight: 600;
+        letter-spacing: 0.6px;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+      }
+      .btn i {
+        font-size: 16px;
+      }
+      .btn.primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        box-shadow: 0 6px 18px rgba(255, 46, 77, 0.35);
+      }
+      .btn.primary:hover {
+        transform: translate3d(0, -2px, 0);
+        box-shadow: 0 10px 26px rgba(255, 46, 77, 0.5);
+      }
+      .btn.primary:active {
+        transform: translate3d(0, 0, 0) scale(0.98);
+      }
+      .btn.primary:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        transform: none;
+      }
 
-    .btn.whatsapp{
-      background:linear-gradient(135deg,#25d366,#128c7e);
-      color:#fff;
-      box-shadow:0 6px 18px rgba(37,211,102,.28);
-    }
-    .btn.whatsapp:hover{transform:translate3d(0,-2px,0);box-shadow:0 10px 24px rgba(37,211,102,.42);}
-    .btn.whatsapp:active{transform:translate3d(0,0,0) scale(.98);}
+      .btn.whatsapp {
+        background: linear-gradient(135deg, #25d366, #128c7e);
+        color: #fff;
+        box-shadow: 0 6px 18px rgba(37, 211, 102, 0.28);
+      }
+      .btn.whatsapp:hover {
+        transform: translate3d(0, -2px, 0);
+        box-shadow: 0 10px 24px rgba(37, 211, 102, 0.42);
+      }
+      .btn.whatsapp:active {
+        transform: translate3d(0, 0, 0) scale(0.98);
+      }
 
-    /* =========================================================
+      /* =========================================================
        STEPS BOX
     ========================================================= */
-    .steps h2{
-      font-family:'Orbitron',sans-serif;
-      font-size:13px;margin:0 0 14px;letter-spacing:1px;
-      display:flex;align-items:center;gap:9px;color:var(--accent);
-    }
-    .steps ol{
-      margin:0;padding-left:20px;
-      display:flex;flex-direction:column;gap:10px;
-    }
-    .steps li{
-      font-size:13.2px;line-height:1.65;color:var(--muted);
-      padding-left:2px;
-    }
-    .steps li b{color:var(--text);font-weight:600;}
-    .steps li code{
-      font-family:'Orbitron',monospace;font-size:11.5px;
-      background:var(--input-bg);border:1px solid var(--border);
-      padding:2px 7px;border-radius:6px;color:var(--accent);
-    }
+      .steps h2 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 13px;
+        margin: 0 0 14px;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--accent);
+      }
+      .steps ol {
+        margin: 0;
+        padding-left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .steps li {
+        font-size: 13.2px;
+        line-height: 1.65;
+        color: var(--muted);
+        padding-left: 2px;
+      }
+      .steps li b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .steps li code {
+        font-family: 'Orbitron', monospace;
+        font-size: 11.5px;
+        background: var(--input-bg);
+        border: 1px solid var(--border);
+        padding: 2px 7px;
+        border-radius: 6px;
+        color: var(--accent);
+      }
 
-    /* =========================================================
+      /* =========================================================
        INPUT
     ========================================================= */
-    .input-container{
-      display:flex;align-items:center;gap:11px;
-      background:var(--input-bg);
-      border:1.5px solid var(--border);
-      border-radius:15px;
-      padding:0 15px;
-      margin-bottom:14px;
-      transition:border-color .2s ease, box-shadow .2s ease;
-    }
-    .input-container:focus-within{
-      border-color:var(--accent);
-      box-shadow:0 0 0 4px rgba(255,46,77,.15);
-    }
-    body.light .input-container:focus-within{box-shadow:0 0 0 4px rgba(230,57,70,.13);}
-    .input-container i{color:var(--accent);font-size:16px;}
-    .input-container input{
-      flex:1;width:100%;height:54px;
-      border:none;outline:none;background:transparent;
-      color:var(--text);font-size:16px;font-family:inherit;
-      letter-spacing:.8px;font-weight:500;
-    }
-    .input-container input::placeholder{color:var(--muted);opacity:.65;font-weight:400;}
+      .input-container {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: var(--input-bg);
+        border: 1.5px solid var(--border);
+        border-radius: 15px;
+        padding: 0 15px;
+        margin-bottom: 14px;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .input-container:focus-within {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(255, 46, 77, 0.15);
+      }
+      body.light .input-container:focus-within {
+        box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.13);
+      }
+      .input-container i {
+        color: var(--accent);
+        font-size: 16px;
+      }
+      .input-container input {
+        flex: 1;
+        width: 100%;
+        height: 54px;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 16px;
+        font-family: inherit;
+        letter-spacing: 0.8px;
+        font-weight: 500;
+      }
+      .input-container input::placeholder {
+        color: var(--muted);
+        opacity: 0.65;
+        font-weight: 400;
+      }
 
-    /* =========================================================
+      /* =========================================================
        LOADER
     ========================================================= */
-    .loader{
-      display:none;flex-direction:column;align-items:center;gap:13px;
-      padding:24px 0 8px;color:var(--muted);font-size:12.5px;letter-spacing:.5px;
-    }
-    .loader.show{display:flex;animation:fadeUp .3s ease;}
-    .spinner{
-      width:44px;height:44px;border-radius:50%;
-      border:3px solid rgba(255,46,77,.18);
-      border-top-color:var(--accent);
-      animation:spin .8s linear infinite;
-    }
-    body.light .spinner{border-color:rgba(230,57,70,.15);border-top-color:var(--accent);}
-    @keyframes spin{to{transform:rotate(360deg);}}
+      .loader {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 13px;
+        padding: 24px 0 8px;
+        color: var(--muted);
+        font-size: 12.5px;
+        letter-spacing: 0.5px;
+      }
+      .loader.show {
+        display: flex;
+        animation: fadeUp 0.3s ease;
+      }
+      .spinner {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 46, 77, 0.18);
+        border-top-color: var(--accent);
+        animation: spin 0.8s linear infinite;
+      }
+      body.light .spinner {
+        border-color: rgba(230, 57, 70, 0.15);
+        border-top-color: var(--accent);
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-    /* =========================================================
+      /* =========================================================
        CODE RESULT
     ========================================================= */
-    .code-card{
-      margin-top:16px;padding:18px 16px;
-      border-radius:17px;
-      border:1.5px dashed var(--border);
-      background:var(--input-bg);
-      text-align:center;
-      animation:fadeUp .4s ease;
-    }
-    .code-label{
-      display:block;font-size:11px;letter-spacing:2px;
-      text-transform:uppercase;color:var(--muted);margin-bottom:12px;
-    }
-    .code-value{
-      display:block;
-      font-family:'Orbitron',monospace;
-      font-size:clamp(20px,6.5vw,27px);
-      font-weight:800;letter-spacing:3.5px;
-      color:var(--accent);
-      word-break:break-all;
-      margin-bottom:16px;
-      text-shadow:0 0 18px rgba(255,46,77,.45);
-    }
-    .code-value.err{
-      font-size:14px;letter-spacing:.5px;
-      color:var(--danger);text-shadow:none;
-      font-family:'Poppins',sans-serif;font-weight:600;
-    }
-    .copy-btn{
-      display:inline-flex;align-items:center;gap:9px;
-      padding:12px 26px;border-radius:13px;
-      border:1.5px solid var(--accent);
-      background:transparent;color:var(--accent);
-      font-family:inherit;font-weight:600;font-size:13.5px;
-      cursor:pointer;
-      transition:transform .2s ease, background .2s ease, color .2s ease;
-    }
-    .copy-btn:hover{background:var(--accent);color:#fff;transform:translate3d(0,-2px,0);}
-    .copy-btn:active{transform:scale(.96);}
-    .copy-btn.copied{background:#25d366;border-color:#25d366;color:#fff;}
+      .code-card {
+        margin-top: 16px;
+        padding: 18px 16px;
+        border-radius: 17px;
+        border: 1.5px dashed var(--border);
+        background: var(--input-bg);
+        text-align: center;
+        animation: fadeUp 0.4s ease;
+      }
+      .code-label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+      .code-value {
+        display: block;
+        font-family: 'Orbitron', monospace;
+        font-size: clamp(20px, 6.5vw, 27px);
+        font-weight: 800;
+        letter-spacing: 3.5px;
+        color: var(--accent);
+        word-break: break-all;
+        margin-bottom: 16px;
+        text-shadow: 0 0 18px rgba(255, 46, 77, 0.45);
+      }
+      .code-value.err {
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        color: var(--danger);
+        text-shadow: none;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+      }
+      .copy-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 12px 26px;
+        border-radius: 13px;
+        border: 1.5px solid var(--accent);
+        background: transparent;
+        color: var(--accent);
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 13.5px;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease,
+          color 0.2s ease;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translate3d(0, -2px, 0);
+      }
+      .copy-btn:active {
+        transform: scale(0.96);
+      }
+      .copy-btn.copied {
+        background: #25d366;
+        border-color: #25d366;
+        color: #fff;
+      }
 
-    /* =========================================================
+      /* =========================================================
        CODE EXPIRY TIMER
     ========================================================= */
-    .code-timer{
-      display:inline-flex;align-items:center;gap:8px;
-      margin-top:14px;padding:9px 18px;
-      border-radius:12px;
-      background:rgba(255,46,77,.1);
-      border:1px solid var(--border);
-      font-family:'Orbitron',monospace;
-      font-size:12.5px;font-weight:600;letter-spacing:1px;
-      color:var(--accent);
-    }
-    .code-timer b{font-weight:800;}
-    .code-timer.expired{
-      background:rgba(255,92,122,.1);
-      border-color:rgba(255,92,122,.35);
-      color:var(--danger);
-      font-family:'Poppins',sans-serif;
-      font-weight:600;letter-spacing:.4px;
-    }
-    body.light .code-timer{background:rgba(230,57,70,.08);}
+      .code-timer {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 14px;
+        padding: 9px 18px;
+        border-radius: 12px;
+        background: rgba(255, 46, 77, 0.1);
+        border: 1px solid var(--border);
+        font-family: 'Orbitron', monospace;
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: var(--accent);
+      }
+      .code-timer b {
+        font-weight: 800;
+      }
+      .code-timer.expired {
+        background: rgba(255, 92, 122, 0.1);
+        border-color: rgba(255, 92, 122, 0.35);
+        color: var(--danger);
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+      }
+      body.light .code-timer {
+        background: rgba(230, 57, 70, 0.08);
+      }
 
-    /* =========================================================
+      /* =========================================================
        MESSAGES / WARN
     ========================================================= */
-    .msg{
-      font-size:13px;font-weight:500;text-align:center;
-      margin:14px 0 0;padding:12px;border-radius:13px;
-      animation:fadeUp .3s ease;line-height:1.5;
-    }
-    .msg.error{color:var(--danger);background:rgba(255,46,77,.1);border:1px solid rgba(255,46,77,.3);}
-    .msg.warn{
-      color:var(--warn);
-      background:rgba(255,182,72,.1);
-      border:1px solid rgba(255,182,72,.35);
-      text-align:left;
-      display:flex;gap:10px;align-items:flex-start;
-    }
-    .msg.warn i{font-size:16px;margin-top:2px;flex-shrink:0;}
-    .msg.warn b{display:block;margin-bottom:3px;color:var(--warn);}
-    .msg.warn small{color:var(--muted);font-size:12px;line-height:1.5;}
+      .msg {
+        font-size: 13px;
+        font-weight: 500;
+        text-align: center;
+        margin: 14px 0 0;
+        padding: 12px;
+        border-radius: 13px;
+        animation: fadeUp 0.3s ease;
+        line-height: 1.5;
+      }
+      .msg.error {
+        color: var(--danger);
+        background: rgba(255, 46, 77, 0.1);
+        border: 1px solid rgba(255, 46, 77, 0.3);
+      }
+      .msg.warn {
+        color: var(--warn);
+        background: rgba(255, 182, 72, 0.1);
+        border: 1px solid rgba(255, 182, 72, 0.35);
+        text-align: left;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .msg.warn i {
+        font-size: 16px;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+      .msg.warn b {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--warn);
+      }
+      .msg.warn small {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
 
-    /* =========================================================
+      /* =========================================================
        FOOTER
     ========================================================= */
-    .footer{
-      text-align:center;font-size:11.5px;color:var(--muted);
-      letter-spacing:.6px;margin:6px 0 0;
-    }
-    .footer b{color:var(--accent);font-weight:600;}
+      .footer {
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--muted);
+        letter-spacing: 0.6px;
+        margin: 6px 0 0;
+      }
+      .footer b {
+        color: var(--accent);
+        font-weight: 600;
+      }
 
-    /* =========================================================
+      /* =========================================================
        PAIR PAGE — RED / DISAN HERO
     ========================================================= */
-    .pair-hero{
-      position:relative;
-      padding:22px 18px 26px;
-      border-radius:22px;
-      background:
-        linear-gradient(135deg, rgba(255,46,77,.16), rgba(201,24,74,.16));
-      border:1px solid var(--border);
-      overflow:hidden;
-      text-align:center;
-    }
-    body.light .pair-hero{
-      background:linear-gradient(135deg, rgba(230,57,70,.12), rgba(201,24,74,.12));
-    }
-    .pair-hero::before{
-      content:"";
-      position:absolute;
-      top:-50%;left:-50%;
-      width:200%;height:200%;
-      background:radial-gradient(circle at 30% 30%, rgba(255,46,77,.16), transparent 45%);
-      animation:heroGlow 7s linear infinite;
-      pointer-events:none;
-    }
-    @keyframes heroGlow{
-      0%{transform:rotate(0deg);}
-      100%{transform:rotate(360deg);}
-    }
-    .pair-hero-icon{
-      position:relative;
-      width:64px;height:64px;
-      margin:0 auto 12px;
-      border-radius:50%;
-      display:grid;place-items:center;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#fff;
-      font-size:26px;
-      box-shadow:0 8px 24px rgba(255,46,77,.45);
-      animation:floatIcon 3s ease-in-out infinite;
-    }
-    @keyframes floatIcon{
-      0%,100%{transform:translateY(0);}
-      50%{transform:translateY(-6px);}
-    }
-    .pair-hero h2{
-      position:relative;
-      font-family:'Orbitron',sans-serif;
-      font-size:18px;letter-spacing:2px;
-      margin:0 0 6px;
-      color:var(--text);
-    }
-    .pair-hero p{
-      position:relative;
-      font-size:12.5px;color:var(--muted);
-      margin:0;letter-spacing:.4px;
-    }
+      .pair-hero {
+        position: relative;
+        padding: 22px 18px 26px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, rgba(255, 46, 77, 0.16), rgba(201, 24, 74, 0.16));
+        border: 1px solid var(--border);
+        overflow: hidden;
+        text-align: center;
+      }
+      body.light .pair-hero {
+        background: linear-gradient(135deg, rgba(230, 57, 70, 0.12), rgba(201, 24, 74, 0.12));
+      }
+      .pair-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 30%, rgba(255, 46, 77, 0.16), transparent 45%);
+        animation: heroGlow 7s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes heroGlow {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .pair-hero-icon {
+        position: relative;
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        font-size: 26px;
+        box-shadow: 0 8px 24px rgba(255, 46, 77, 0.45);
+        animation: floatIcon 3s ease-in-out infinite;
+      }
+      @keyframes floatIcon {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      .pair-hero h2 {
+        position: relative;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 18px;
+        letter-spacing: 2px;
+        margin: 0 0 6px;
+        color: var(--text);
+      }
+      .pair-hero p {
+        position: relative;
+        font-size: 12.5px;
+        color: var(--muted);
+        margin: 0;
+        letter-spacing: 0.4px;
+      }
 
-    /* Stepper */
-    .stepper{
-      display:flex;align-items:center;justify-content:center;
-      gap:0;
-      margin:16px 0 4px;
-    }
-    .step-dot{
-      width:30px;height:30px;border-radius:50%;
-      display:grid;place-items:center;
-      font-size:11px;font-weight:700;
-      background:var(--input-bg);
-      border:1.5px solid var(--border);
-      color:var(--muted);
-      transition:.25s;
-    }
-    .step-dot.active{
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#fff;
-      border-color:transparent;
-      box-shadow:0 4px 12px rgba(255,46,77,.4);
-    }
-    .step-line{
-      width:36px;height:2px;
-      background:var(--border);
-      border-radius:2px;
-      transition:.25s;
-    }
-    .step-line.active{
-      background:linear-gradient(90deg,var(--accent),var(--accent2));
-    }
+      /* Stepper */
+      .stepper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        margin: 16px 0 4px;
+      }
+      .step-dot {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 700;
+        background: var(--input-bg);
+        border: 1.5px solid var(--border);
+        color: var(--muted);
+        transition: 0.25s;
+      }
+      .step-dot.active {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(255, 46, 77, 0.4);
+      }
+      .step-line {
+        width: 36px;
+        height: 2px;
+        background: var(--border);
+        border-radius: 2px;
+        transition: 0.25s;
+      }
+      .step-line.active {
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+      }
 
-    /* Pair page card */
-    .pair-card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:20px;
-      padding:20px;
-      box-shadow:var(--shadow);
-      transition:background .3s ease, border-color .3s ease;
-    }
+      /* Pair page card */
+      .pair-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--shadow);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease;
+      }
 
-    /* Modern input */
-    .pair-input{
-      position:relative;
-      margin-bottom:14px;
-    }
-    .pair-input i{
-      position:absolute;left:16px;top:50%;
-      transform:translateY(-50%);
-      color:var(--accent);
-      font-size:16px;
-      pointer-events:none;
-      transition:.25s;
-    }
-    .pair-input input{
-      width:100%;height:56px;
-      padding:0 18px 0 46px;
-      border-radius:15px;
-      border:1.5px solid var(--border);
-      background:var(--input-bg);
-      color:var(--text);
-      font-family:inherit;
-      font-size:16px;font-weight:500;
-      letter-spacing:.8px;
-      outline:none;
-      transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .pair-input input::placeholder{color:var(--muted);opacity:.6;font-weight:400;}
-    .pair-input input:focus{
-      border-color:var(--accent);
-      box-shadow:0 0 0 4px rgba(255,46,77,.15);
-    }
-    body.light .pair-input input:focus{box-shadow:0 0 0 4px rgba(230,57,70,.13);}
+      /* Modern input */
+      .pair-input {
+        position: relative;
+        margin-bottom: 14px;
+      }
+      .pair-input i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-size: 16px;
+        pointer-events: none;
+        transition: 0.25s;
+      }
+      .pair-input input {
+        width: 100%;
+        height: 56px;
+        padding: 0 18px 0 46px;
+        border-radius: 15px;
+        border: 1.5px solid var(--border);
+        background: var(--input-bg);
+        color: var(--text);
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.8px;
+        outline: none;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+      }
+      .pair-input input::placeholder {
+        color: var(--muted);
+        opacity: 0.6;
+        font-weight: 400;
+      }
+      .pair-input input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(255, 46, 77, 0.15);
+      }
+      body.light .pair-input input:focus {
+        box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.13);
+      }
 
-    /* Shiny submit button */
-    .btn-shiny{
-      position:relative;
-      overflow:hidden;
-    }
-    .btn-shiny::after{
-      content:"";
-      position:absolute;
-      top:0;left:-100%;
-      width:100%;height:100%;
-      background:linear-gradient(120deg, transparent, rgba(255,255,255,.4), transparent);
-      animation:shiny 3.5s ease-in-out infinite;
-      pointer-events:none;
-    }
-    @keyframes shiny{
-      0%{left:-100%;}
-      60%{left:100%;}
-      100%{left:100%;}
-    }
+      /* Shiny submit button */
+      .btn-shiny {
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-shiny::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: shiny 3.5s ease-in-out infinite;
+        pointer-events: none;
+      }
+      @keyframes shiny {
+        0% {
+          left: -100%;
+        }
+        60% {
+          left: 100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
 
-    /* =========================================================
+      /* =========================================================
        LOGO AT BOTTOM OF PAIR PAGE
     ========================================================= */
-    .pair-logo{
-      margin:6px auto 0;
-      display:grid;place-items:center;
-    }
+      .pair-logo {
+        margin: 6px auto 0;
+        display: grid;
+        place-items: center;
+      }
 
-    /* =========================================================
+      /* =========================================================
        BOT INFO CARD
     ========================================================= */
-    .bot-info h3{
-      font-family:'Orbitron',sans-serif;
-      font-size:13px;margin:0 0 12px;letter-spacing:1px;
-      display:flex;align-items:center;gap:9px;color:var(--accent);
-    }
-    .bot-info p{
-      font-size:13.2px;line-height:1.7;
-      color:var(--muted);margin:0 0 14px;
-    }
-    .bot-info ul{
-      list-style:none;padding:0;margin:0;
-      display:flex;flex-direction:column;gap:8px;
-    }
-    .bot-info ul li{
-      display:flex;align-items:center;gap:10px;
-      font-size:12.8px;font-weight:500;color:var(--text);
-      padding:9px 13px;border-radius:11px;
-      background:var(--input-bg);
-      border:1px solid var(--border);
-      transition:transform .2s ease, border-color .2s ease;
-    }
-    .bot-info ul li:hover{
-      border-color:var(--accent);
-      transform:translate3d(3px,0,0);
-    }
-    .bot-info ul li i{
-      color:var(--accent);font-size:12px;
-      width:16px;text-align:center;flex-shrink:0;
-    }
+      .bot-info h3 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 13px;
+        margin: 0 0 12px;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--accent);
+      }
+      .bot-info p {
+        font-size: 13.2px;
+        line-height: 1.7;
+        color: var(--muted);
+        margin: 0 0 14px;
+      }
+      .bot-info ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .bot-info ul li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12.8px;
+        font-weight: 500;
+        color: var(--text);
+        padding: 9px 13px;
+        border-radius: 11px;
+        background: var(--input-bg);
+        border: 1px solid var(--border);
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .bot-info ul li:hover {
+        border-color: var(--accent);
+        transform: translate3d(3px, 0, 0);
+      }
+      .bot-info ul li i {
+        color: var(--accent);
+        font-size: 12px;
+        width: 16px;
+        text-align: center;
+        flex-shrink: 0;
+      }
 
-    /* =========================================================
+      /* =========================================================
        REDUCED MOTION
     ========================================================= */
-    @media (prefers-reduced-motion: reduce){
-      *, *::before, *::after{
-        animation-duration:.001ms !important;
-        animation-iteration-count:1 !important;
-        transition-duration:.001ms !important;
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
       }
-    }
 
-    @media (max-width:480px){
-      .pair-hero::before{animation:none;}
-      .title{animation:none;background-position:0 center;}
-      .btn-shiny::after{display:none;}
-    }
-  </style>
-</head>
+      @media (max-width: 480px) {
+        .pair-hero::before {
+          animation: none;
+        }
+        .title {
+          animation: none;
+          background-position: 0 center;
+        }
+        .btn-shiny::after {
+          display: none;
+        }
+      }
+    </style>
+  </head>
 
-<body>
-
-  <!-- ============================================================
+  <body>
+    <!-- ============================================================
        PAGE 1 : LANDING (video page)
   ============================================================= -->
-  <section id="landing" class="view active">
+    <section id="landing" class="view active">
+      <div class="topbar">
+        <div class="brand"><i class="fab fa-whatsapp"></i> DG BOT</div>
+        <button class="icon-btn" data-theme-btn title="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
 
-    <div class="topbar">
-      <div class="brand"><i class="fab fa-whatsapp"></i> DG BOT</div>
-      <button class="icon-btn" data-theme-btn title="Toggle theme">
-        <i class="fas fa-moon"></i>
-      </button>
-    </div>
+      <!-- Bot logo (circle at top) -->
+      <div class="hero-avatar">
+        <img
+          src="https://res.cloudinary.com/divxgmr1g/image/upload/v1790919894/bl4blh5mr3ct4ltpa0ir.jpg"
+          alt="DG Bot Logo"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
 
-    <!-- Bot logo (circle at top) -->
-    <div class="hero-avatar">
-      <img src="https://res.cloudinary.com/divxgmr1g/image/upload/v1790919894/bl4blh5mr3ct4ltpa0ir.jpg"
-           alt="DG Bot Logo" loading="lazy" decoding="async">
-    </div>
+      <h1 class="title">DG WHATSAPP BOT</h1>
+      <p class="subtitle">Fast • Secure • Reliable</p>
 
-    <h1 class="title">DG WHATSAPP BOT</h1>
-    <p class="subtitle">Fast • Secure • Reliable</p>
+      <!-- Single video — autoplay + loop, original size -->
+      <div class="video-card">
+        <video
+          id="demoVideo"
+          src="https://res.cloudinary.com/divxgmr1g/video/upload/v1790904871/vh0driji7fg0hefhotge.mp4"
+          poster="https://res.cloudinary.com/divxgmr1g/image/upload/v1790919894/bl4blh5mr3ct4ltpa0ir.jpg"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+          disablepictureinpicture
+          controlslist="nodownload noplaybackrate"
+        ></video>
+        <div class="video-badge"><i class="fas fa-circle"></i> LIVE DEMO</div>
+        <button id="soundBtn" class="sound-btn">
+          <i class="fas fa-volume-mute"></i><span>Sound Off</span>
+        </button>
+      </div>
 
-    <!-- Single video — autoplay + loop, original size -->
-    <div class="video-card">
-      <video id="demoVideo"
-             src="https://res.cloudinary.com/divxgmr1g/video/upload/v1790904871/vh0driji7fg0hefhotge.mp4"
-             poster="https://res.cloudinary.com/divxgmr1g/image/upload/v1790919894/bl4blh5mr3ct4ltpa0ir.jpg"
-             autoplay loop muted playsinline
-             preload="auto"
-             disablepictureinpicture
-             controlslist="nodownload noplaybackrate"></video>
-      <div class="video-badge"><i class="fas fa-circle"></i> LIVE DEMO</div>
-      <button id="soundBtn" class="sound-btn">
-        <i class="fas fa-volume-mute"></i><span>Sound Off</span>
-      </button>
-    </div>
+      <!-- GET BOT PAIR -->
+      <button id="getPairBtn" class="btn primary"><i class="fas fa-link"></i> GET BOT PAIR</button>
 
-    <!-- GET BOT PAIR -->
-    <button id="getPairBtn" class="btn primary">
-      <i class="fas fa-link"></i> GET BOT PAIR
-    </button>
+      <!-- Step by step -->
+      <div class="card steps">
+        <h2><i class="fas fa-list-ol"></i> HOW TO GET YOUR PAIR CODE</h2>
+        <ol>
+          <li>Tap the <b>GET BOT PAIR</b> button above.</li>
+          <li>
+            Enter your <b>WhatsApp number with country code</b> — e.g. <code>9476XXXXXXX</code> (no
+            + and no leading 0).
+          </li>
+          <li>Press <b>Generate Code</b> and wait a few seconds while we create your code.</li>
+          <li>Tap the <b>Copy</b> button to copy your 8-digit pairing code.</li>
+          <li>
+            Open <b>WhatsApp</b> → <b>Settings</b> → <b>Linked Devices</b> → <b>Link a Device</b>.
+          </li>
+          <li>Choose <b>Link with phone number</b> and paste the code.</li>
+          <li>Done! Your bot is now connected ✅</li>
+        </ol>
+      </div>
 
-    <!-- Step by step -->
-    <div class="card steps">
-      <h2><i class="fas fa-list-ol"></i> HOW TO GET YOUR PAIR CODE</h2>
-      <ol>
-        <li>Tap the <b>GET BOT PAIR</b> button above.</li>
-        <li>Enter your <b>WhatsApp number with country code</b> — e.g. <code>9476XXXXXXX</code> (no + and no leading 0).</li>
-        <li>Press <b>Generate Code</b> and wait a few seconds while we create your code.</li>
-        <li>Tap the <b>Copy</b> button to copy your 8-digit pairing code.</li>
-        <li>Open <b>WhatsApp</b> → <b>Settings</b> → <b>Linked Devices</b> → <b>Link a Device</b>.</li>
-        <li>Choose <b>Link with phone number</b> and paste the code.</li>
-        <li>Done! Your bot is now connected ✅</li>
-      </ol>
-    </div>
+      <!-- Contact owner -->
+      <a
+        class="btn whatsapp"
+        href="https://wa.me/94743277981?text=Hi%20Dasun%2C%20I%20need%20help%20with%20the%20DG%20WhatsApp%20Bot"
+        target="_blank"
+        rel="noopener"
+      >
+        <i class="fab fa-whatsapp"></i> CONTACT OWNER
+      </a>
 
-    <!-- Contact owner -->
-    <a class="btn whatsapp"
-       href="https://wa.me/94743277981?text=Hi%20Dasun%2C%20I%20need%20help%20with%20the%20DG%20WhatsApp%20Bot"
-       target="_blank" rel="noopener">
-      <i class="fab fa-whatsapp"></i> CONTACT OWNER
-    </a>
+      <p class="footer">Developed by <b>Dasun Gimahan</b> ✨</p>
+    </section>
 
-    <p class="footer">Developed by <b>Dasun Gimahan</b> ✨</p>
-  </section>
-
-
-  <!-- ============================================================
+    <!-- ============================================================
        PAGE 2 : PAIR  (red / Disan look)
   ============================================================= -->
-  <section id="pairView" class="view">
-
-    <div class="topbar">
-      <button id="backBtn" class="icon-btn" title="Back"><i class="fas fa-arrow-left"></i></button>
-      <div class="brand"><i class="fas fa-link"></i> DG PAIR</div>
-      <button class="icon-btn" data-theme-btn title="Toggle theme">
-        <i class="fas fa-moon"></i>
-      </button>
-    </div>
-
-    <!-- Hero header -->
-    <div class="pair-hero">
-      <div class="pair-hero-icon">
-        <i class="fas fa-link"></i>
-      </div>
-      <h2>LINK YOUR WHATSAPP</h2>
-      <p>Generate a secure pairing code in seconds</p>
-
-      <!-- Stepper -->
-      <div class="stepper">
-        <div class="step-dot active" id="step1">1</div>
-        <div class="step-line active" id="line1"></div>
-        <div class="step-dot" id="step2">2</div>
-        <div class="step-line" id="line2"></div>
-        <div class="step-dot" id="step3">3</div>
-      </div>
-    </div>
-
-    <!-- Pair card -->
-    <div class="pair-card">
-      <!-- Input -->
-      <div class="pair-input">
-        <i class="fab fa-whatsapp"></i>
-        <input id="number" type="tel" inputmode="numeric" autocomplete="off"
-               placeholder="9476xxxxxxx">
+    <section id="pairView" class="view">
+      <div class="topbar">
+        <button id="backBtn" class="icon-btn" title="Back">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="brand"><i class="fas fa-link"></i> DG PAIR</div>
+        <button class="icon-btn" data-theme-btn title="Toggle theme">
+          <i class="fas fa-moon"></i>
+        </button>
       </div>
 
-      <!-- Submit -->
-      <button id="submit" class="btn primary btn-shiny">
-        <i class="fas fa-paper-plane"></i> Generate Code
-      </button>
+      <!-- Hero header -->
+      <div class="pair-hero">
+        <div class="pair-hero-icon">
+          <i class="fas fa-link"></i>
+        </div>
+        <h2>LINK YOUR WHATSAPP</h2>
+        <p>Generate a secure pairing code in seconds</p>
 
-      <!-- Loading -->
-      <div id="loader" class="loader">
-        <div class="spinner"></div>
-        <span>Generating your code, please wait...</span>
+        <!-- Stepper -->
+        <div class="stepper">
+          <div class="step-dot active" id="step1">1</div>
+          <div class="step-line active" id="line1"></div>
+          <div class="step-dot" id="step2">2</div>
+          <div class="step-line" id="line2"></div>
+          <div class="step-dot" id="step3">3</div>
+        </div>
       </div>
 
-      <!-- Result -->
-      <main id="pair"></main>
-    </div>
+      <!-- Pair card -->
+      <div class="pair-card">
+        <!-- Input -->
+        <div class="pair-input">
+          <i class="fab fa-whatsapp"></i>
+          <input
+            id="number"
+            type="tel"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="9476xxxxxxx"
+          />
+        </div>
 
-    <!-- Bot description -->
-    <div class="card bot-info">
-      <h3><i class="fas fa-robot"></i> ABOUT DG BOT</h3>
-      <p>
-        DG WhatsApp Bot is a fast, secure and reliable multi-device WhatsApp bot
-        built for automation. Connect your account using an official pairing code —
-        no QR scanning required. Just enter your number, copy the code and link it
-        from your WhatsApp app.
-      </p>
-      <ul>
-        <li><i class="fas fa-bolt"></i> Lightning-fast response time</li>
-        <li><i class="fas fa-shield-alt"></i> Fully secure &amp; private connection</li>
-        <li><i class="fas fa-sync-alt"></i> Always online — 24/7 uptime</li>
-      </ul>
-    </div>
+        <!-- Submit -->
+        <button id="submit" class="btn primary btn-shiny">
+          <i class="fas fa-paper-plane"></i> Generate Code
+        </button>
 
-    <!-- Official bot logo (same size as the hero avatar) -->
-    <div class="hero-avatar pair-logo">
-      <img src="https://res.cloudinary.com/divxgmr1g/image/upload/v1790919894/bl4blh5mr3ct4ltpa0ir.jpg"
-           alt="DG Bot Official Logo" loading="lazy" decoding="async">
-    </div>
+        <!-- Loading -->
+        <div id="loader" class="loader">
+          <div class="spinner"></div>
+          <span>Generating your code, please wait...</span>
+        </div>
 
-    <p class="footer">Developed by <b>Dasun Gimahan</b> ✨</p>
-  </section>
+        <!-- Result -->
+        <main id="pair"></main>
+      </div>
 
+      <!-- Bot description -->
+      <div class="card bot-info">
+        <h3><i class="fas fa-robot"></i> ABOUT DG BOT</h3>
+        <p>
+          DG WhatsApp Bot is a fast, secure and reliable multi-device WhatsApp bot built for
+          automation. Connect your account using an official pairing code — no QR scanning required.
+          Just enter your number, copy the code and link it from your WhatsApp app.
+        </p>
+        <ul>
+          <li><i class="fas fa-bolt"></i> Lightning-fast response time</li>
+          <li><i class="fas fa-shield-alt"></i> Fully secure &amp; private connection</li>
+          <li><i class="fas fa-sync-alt"></i> Always online — 24/7 uptime</li>
+        </ul>
+      </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
-  <script>
-    /* =========================================================
+      <!-- Official bot logo (same size as the hero avatar) -->
+      <div class="hero-avatar pair-logo">
+        <img
+          src="https://res.cloudinary.com/divxgmr1g/image/upload/v1790919894/bl4blh5mr3ct4ltpa0ir.jpg"
+          alt="DG Bot Official Logo"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <p class="footer">Developed by <b>Dasun Gimahan</b> ✨</p>
+    </section>
+
+    <script>
+      /* =========================================================
        CONFIG
     ========================================================= */
-    const CONFIG = {
-      pairEndpoint: '/code'
-    };
+      const CONFIG = {
+        pairEndpoint: '/code',
+      };
 
-    /* =========================================================
+      /* =========================================================
        ELEMENTS
     ========================================================= */
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
+      let a = document.getElementById('pair');
+      let b = document.getElementById('submit');
+      let c = document.getElementById('number');
 
-    const loader = document.getElementById("loader");
+      const loader = document.getElementById('loader');
 
-    /* =========================================================
+      /* =========================================================
        THEME (Dark / Light)
     ========================================================= */
-    function applyTheme(mode){
-      document.body.classList.toggle('light', mode === 'light');
-      try { localStorage.setItem('dg-theme', mode); } catch(e){}
-      document.querySelectorAll('[data-theme-btn] i').forEach(el => {
-        el.className = (mode === 'light') ? 'fas fa-sun' : 'fas fa-moon';
+      function applyTheme(mode) {
+        document.body.classList.toggle('light', mode === 'light');
+        try {
+          localStorage.setItem('dg-theme', mode);
+        } catch (e) {}
+        document.querySelectorAll('[data-theme-btn] i').forEach((el) => {
+          el.className = mode === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+      }
+      document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+        });
       });
-    }
-    document.querySelectorAll('[data-theme-btn]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
-      });
-    });
-    let savedTheme = 'dark';
-    try { savedTheme = localStorage.getItem('dg-theme') || 'dark'; } catch(e){}
-    applyTheme(savedTheme);
+      let savedTheme = 'dark';
+      try {
+        savedTheme = localStorage.getItem('dg-theme') || 'dark';
+      } catch (e) {}
+      applyTheme(savedTheme);
 
-    /* =========================================================
+      /* =========================================================
        VIEW SWITCHING
     ========================================================= */
-    function showView(id){
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (id !== 'pairView') { stopExpiryTimer(); }
-    }
-    document.getElementById('getPairBtn').addEventListener('click', () => showView('pairView'));
-    document.getElementById('backBtn').addEventListener('click', () => showView('landing'));
+      function showView(id) {
+        document.querySelectorAll('.view').forEach((v) => v.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (id !== 'pairView') {
+          stopExpiryTimer();
+        }
+      }
+      document.getElementById('getPairBtn').addEventListener('click', () => showView('pairView'));
+      document.getElementById('backBtn').addEventListener('click', () => showView('landing'));
 
-    /* =========================================================
+      /* =========================================================
        SINGLE VIDEO — autoplay + loop + sound toggle
     ========================================================= */
-    const video    = document.getElementById('demoVideo');
-    const soundBtn = document.getElementById('soundBtn');
+      const video = document.getElementById('demoVideo');
+      const soundBtn = document.getElementById('soundBtn');
 
-    function tryPlay(){
-      if (video && video.paused) {
-        video.play().catch(()=>{});
+      function tryPlay() {
+        if (video && video.paused) {
+          video.play().catch(() => {});
+        }
       }
-    }
-    document.addEventListener('touchstart', tryPlay, { once:true, passive:true });
-    document.addEventListener('click', tryPlay, { once:true });
+      document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+      document.addEventListener('click', tryPlay, { once: true });
 
-    soundBtn.addEventListener('click', () => {
-      video.muted = !video.muted;
-      if (!video.muted) { video.play().catch(()=>{}); }
-      soundBtn.classList.toggle('on', !video.muted);
-      soundBtn.innerHTML = video.muted
-        ? '<i class="fas fa-volume-mute"></i><span>Sound Off</span>'
-        : '<i class="fas fa-volume-up"></i><span>Sound On</span>';
-    });
+      soundBtn.addEventListener('click', () => {
+        video.muted = !video.muted;
+        if (!video.muted) {
+          video.play().catch(() => {});
+        }
+        soundBtn.classList.toggle('on', !video.muted);
+        soundBtn.innerHTML = video.muted
+          ? '<i class="fas fa-volume-mute"></i><span>Sound Off</span>'
+          : '<i class="fas fa-volume-up"></i><span>Sound On</span>';
+      });
 
-    /* =========================================================
+      /* =========================================================
        HELPERS
     ========================================================= */
-    const onlyDigits = v => (v || '').replace(/[^0-9]/g, '');
+      const onlyDigits = (v) => (v || '').replace(/[^0-9]/g, '');
 
-    function escapeHTML(str){
-      return String(str).replace(/[&<>"']/g, s => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-      }[s]));
-    }
+      function escapeHTML(str) {
+        return String(str).replace(
+          /[&<>"']/g,
+          (s) =>
+            ({
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#39;',
+            })[s],
+        );
+      }
 
-    function showLoader(state){
-      loader.classList.toggle('show', state);
-      b.disabled = state;
-      b.innerHTML = state
-        ? '<i class="fas fa-spinner fa-spin"></i> Please wait...'
-        : '<i class="fas fa-paper-plane"></i> Generate Code';
-    }
+      function showLoader(state) {
+        loader.classList.toggle('show', state);
+        b.disabled = state;
+        b.innerHTML = state
+          ? '<i class="fas fa-spinner fa-spin"></i> Please wait...'
+          : '<i class="fas fa-paper-plane"></i> Generate Code';
+      }
 
-    /* Stepper helper */
-    function setStep(n){
-      const s1 = document.getElementById('step1');
-      const s2 = document.getElementById('step2');
-      const s3 = document.getElementById('step3');
-      const l1 = document.getElementById('line1');
-      const l2 = document.getElementById('line2');
-      if (!s1) return;
-      [s1,s2,s3].forEach(el => el.classList.remove('active'));
-      [l1,l2].forEach(el => el.classList.remove('active'));
-      if (n >= 1) s1.classList.add('active');
-      if (n >= 2) { s2.classList.add('active'); l1.classList.add('active'); }
-      if (n >= 3) { s3.classList.add('active'); l2.classList.add('active'); }
-    }
+      /* Stepper helper */
+      function setStep(n) {
+        const s1 = document.getElementById('step1');
+        const s2 = document.getElementById('step2');
+        const s3 = document.getElementById('step3');
+        const l1 = document.getElementById('line1');
+        const l2 = document.getElementById('line2');
+        if (!s1) return;
+        [s1, s2, s3].forEach((el) => el.classList.remove('active'));
+        [l1, l2].forEach((el) => el.classList.remove('active'));
+        if (n >= 1) s1.classList.add('active');
+        if (n >= 2) {
+          s2.classList.add('active');
+          l1.classList.add('active');
+        }
+        if (n >= 3) {
+          s3.classList.add('active');
+          l2.classList.add('active');
+        }
+      }
 
-    /* =========================================================
+      /* =========================================================
        RATE LIMIT
     ========================================================= */
-    const RATE_LIMIT_MAX    = 3;
-    const RATE_LIMIT_WINDOW = 60 * 1000;
-    let requestTimes = [];
+      const RATE_LIMIT_MAX = 3;
+      const RATE_LIMIT_WINDOW = 60 * 1000;
+      let requestTimes = [];
 
-    function checkRateLimit(){
-      const now = Date.now();
-      requestTimes = requestTimes.filter(t => now - t < RATE_LIMIT_WINDOW);
-      if (requestTimes.length >= RATE_LIMIT_MAX) {
-        const wait = Math.ceil((RATE_LIMIT_WINDOW - (now - requestTimes[0])) / 1000);
-        return { ok:false, wait };
+      function checkRateLimit() {
+        const now = Date.now();
+        requestTimes = requestTimes.filter((t) => now - t < RATE_LIMIT_WINDOW);
+        if (requestTimes.length >= RATE_LIMIT_MAX) {
+          const wait = Math.ceil((RATE_LIMIT_WINDOW - (now - requestTimes[0])) / 1000);
+          return { ok: false, wait };
+        }
+        requestTimes.push(now);
+        return { ok: true };
       }
-      requestTimes.push(now);
-      return { ok:true };
-    }
 
-    function renderRateLimitWarning(wait){
-      a.innerHTML = `
+      function renderRateLimitWarning(wait) {
+        a.innerHTML = `
         <div class="msg warn">
           <i class="fas fa-exclamation-triangle"></i>
           <div>
@@ -912,64 +1301,65 @@
             <br><small>If you keep spamming, you may be temporarily blocked by WhatsApp.</small>
           </div>
         </div>`;
-    }
+      }
 
-    /* =========================================================
+      /* =========================================================
        CODE EXPIRY TIMER
     ========================================================= */
-    let expiryInterval = null;
+      let expiryInterval = null;
 
-    function stopExpiryTimer(){
-      if (expiryInterval) {
-        clearInterval(expiryInterval);
-        expiryInterval = null;
-      }
-    }
-
-    function startExpiryTimer(totalSeconds){
-      stopExpiryTimer();
-      const timerEl = document.getElementById('codeTimer');
-      if (!timerEl) return;
-
-      let remaining = totalSeconds;
-
-      function tick(){
-        if (remaining <= 0) {
-          stopExpiryTimer();
-          timerEl.classList.add('expired');
-          timerEl.innerHTML = '<i class="fas fa-times-circle"></i> Code expired — please request a new one';
-          const btn = document.getElementById('copyBtn');
-          if (btn) btn.style.display = 'none';
-          return;
+      function stopExpiryTimer() {
+        if (expiryInterval) {
+          clearInterval(expiryInterval);
+          expiryInterval = null;
         }
-        const m = String(Math.floor(remaining / 60)).padStart(2, '0');
-        const s = String(remaining % 60).padStart(2, '0');
-        timerEl.innerHTML = `<i class="fas fa-hourglass-half"></i> Expires in <b>${m}:${s}</b>`;
-        remaining--;
       }
-      tick();
-      expiryInterval = setInterval(tick, 1000);
-    }
 
-    /* =========================================================
+      function startExpiryTimer(totalSeconds) {
+        stopExpiryTimer();
+        const timerEl = document.getElementById('codeTimer');
+        if (!timerEl) return;
+
+        let remaining = totalSeconds;
+
+        function tick() {
+          if (remaining <= 0) {
+            stopExpiryTimer();
+            timerEl.classList.add('expired');
+            timerEl.innerHTML =
+              '<i class="fas fa-times-circle"></i> Code expired — please request a new one';
+            const btn = document.getElementById('copyBtn');
+            if (btn) btn.style.display = 'none';
+            return;
+          }
+          const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+          const s = String(remaining % 60).padStart(2, '0');
+          timerEl.innerHTML = `<i class="fas fa-hourglass-half"></i> Expires in <b>${m}:${s}</b>`;
+          remaining--;
+        }
+        tick();
+        expiryInterval = setInterval(tick, 1000);
+      }
+
+      /* =========================================================
        RENDER CODE RESULT
     ========================================================= */
-    function renderCode(code){
-      const isError = !code || code === 'Service Unavailable';
+      function renderCode(code) {
+        const isError = !code || code === 'Service Unavailable';
 
-      if (isError) {
-        stopExpiryTimer();
-        setStep(1);
-        a.innerHTML = `
+        if (isError) {
+          stopExpiryTimer();
+          setStep(1);
+          a.innerHTML = `
           <div class="code-card">
             <span class="code-label">Something went wrong</span>
             <span class="code-value err">${escapeHTML(code)}</span>
           </div>`;
-        return;
-      }
+          return;
+        }
 
-      setStep(3);
-      a.innerHTML = `
+        setStep(3);
+        a.innerHTML = `
         <div class="code-card">
           <span class="code-label">Your Pairing Code</span>
           <span id="codeValue" class="code-value">${escapeHTML(code)}</span>
@@ -982,91 +1372,99 @@
           </div>
         </div>`;
 
-      startExpiryTimer(120);
-    }
+        startExpiryTimer(120);
+      }
 
-    /* =========================================================
+      /* =========================================================
        COPY
     ========================================================= */
-    async function Copy(){
-      const codeEl = document.getElementById('codeValue');
-      const btn    = document.getElementById('copyBtn');
-      if (!codeEl || !btn) return;
+      async function Copy() {
+        const codeEl = document.getElementById('codeValue');
+        const btn = document.getElementById('copyBtn');
+        if (!codeEl || !btn) return;
 
-      const text = codeEl.innerText.trim();
+        const text = codeEl.innerText.trim();
 
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch (err) {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); } catch(e){}
-        ta.remove();
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (err) {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand('copy');
+          } catch (e) {}
+          ta.remove();
+        }
+
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = '<i class="far fa-copy"></i> Copy Code';
+        }, 1600);
       }
 
-      btn.classList.add('copied');
-      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-      setTimeout(() => {
-        btn.classList.remove('copied');
-        btn.innerHTML = '<i class="far fa-copy"></i> Copy Code';
-      }, 1600);
-    }
-
-    /* =========================================================
+      /* =========================================================
        PAIR CODE SUBMIT
     ========================================================= */
-    c.addEventListener('input', () => {
-      c.value = onlyDigits(c.value);
-      if (c.value.length >= 11) setStep(2);
-      else setStep(1);
-    });
+      c.addEventListener('input', () => {
+        c.value = onlyDigits(c.value);
+        if (c.value.length >= 11) setStep(2);
+        else setStep(1);
+      });
 
-    b.addEventListener("click", async (e) => {
-      e.preventDefault();
+      b.addEventListener('click', async (e) => {
+        e.preventDefault();
 
-      const number = onlyDigits(c.value);
+        const number = onlyDigits(c.value);
 
-      if (!number) {
-        stopExpiryTimer();
+        if (!number) {
+          stopExpiryTimer();
+          a.innerHTML = '';
+          loader.classList.remove('show');
+          a.innerHTML =
+            '<p class="msg error">Please enter your WhatsApp number with country code.</p>';
+          return;
+        }
+
+        if (number.length < 11) {
+          stopExpiryTimer();
+          a.innerHTML =
+            '<p class="msg error">Invalid number. Include the country code (e.g. 9476XXXXXXX).</p>';
+          return;
+        }
+
+        const rl = checkRateLimit();
+        if (!rl.ok) {
+          stopExpiryTimer();
+          renderRateLimitWarning(rl.wait);
+          return;
+        }
+
+        c.value = '+' + number;
+        setStep(2);
         a.innerHTML = '';
-        loader.classList.remove('show');
-        a.innerHTML = '<p class="msg error">Please enter your WhatsApp number with country code.</p>';
-        return;
-      }
-
-      if (number.length < 11) {
         stopExpiryTimer();
-        a.innerHTML = '<p class="msg error">Invalid number. Include the country code (e.g. 9476XXXXXXX).</p>';
-        return;
-      }
+        showLoader(true);
 
-      const rl = checkRateLimit();
-      if (!rl.ok) {
-        stopExpiryTimer();
-        renderRateLimitWarning(rl.wait);
-        return;
-      }
-
-      c.value = "+" + number;
-      setStep(2);
-      a.innerHTML = '';
-      stopExpiryTimer();
-      showLoader(true);
-
-      try {
-        const { data } = await axios(`${CONFIG.pairEndpoint}?number=${number}`);
-        const code = (data && data.code) ? data.code : "Service Unavailable";
-        renderCode(code);
-      } catch (err) {
-        renderCode("Service Unavailable");
-      } finally {
-        showLoader(false);
-      }
-    });
-  </script>
-</body>
+        try {
+          const response = await fetch(
+            `${CONFIG.pairEndpoint}?number=${encodeURIComponent(number)}`,
+          );
+          if (!response.ok) throw new Error(`Pairing request failed: ${response.status}`);
+          const data = await response.json();
+          const code = data && data.code ? data.code : 'Service Unavailable';
+          renderCode(code);
+        } catch (err) {
+          renderCode('Service Unavailable');
+        } finally {
+          showLoader(false);
+        }
+      });
+    </script>
+  </body>
 </html>
