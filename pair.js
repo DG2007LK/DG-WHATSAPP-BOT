@@ -44,6 +44,15 @@ const socketCreationTime = new Map();
 const SESSION_BASE_PATH = './session';
 const otpStore = new Map();
 
+     
+// --- Auto-reconnect throttling ---
+// Automatic reconnects (triggered by a dropped connection, not by an admin
+// hitting /reconnect or /connect-all) are limited to once every 4 hours per
+// number, so a flapping connection doesn't spam repeated reconnect/notify cycles.
+const RECONNECT_COOLDOWN_MS = 4 * 60 * 60 * 1000; // 4 hours
+const lastAutoReconnectAttempt = new Map();
+const pendingAutoReconnect = new Map(); // number -> Timeout handle
+
 if (!fs.existsSync(SESSION_BASE_PATH)) {
     fs.mkdirSync(SESSION_BASE_PATH, { recursive: true });
 }
@@ -60,6 +69,31 @@ function generateOTP() {
 function getSriLankaTimestamp() {
     return moment().tz('Asia/Colombo').format('YYYY-MM-DD HH:mm:ss');
 }
+
+  function scheduleAutoReconnect(number, fn) {
+const cleanNumber = number.replace(/[^0-9]/g, '');
+const last = lastAutoReconnectAttempt.get(cleanNumber) || 0;
+const elapsed = Date.now() - last;
+if (pendingAutoReconnect.has(cleanNumber)) {
+// A reconnect is already scheduled for this number; don't stack another.
+return;
+}
+const runNow = () => {
+pendingAutoReconnect.delete(cleanNumber);
+lastAutoReconnectAttempt.set(cleanNumber, Date.now());
+fn();
+};      
+
+    if (elapsed >= RECONNECT_COOLDOWN_MS) {
+ runNow();
+ } else {
+ const wait = RECONNECT_COOLDOWN_MS - elapsed;
+ console.log(` Auto-reconnect for ${cleanNumber} throttled, next attempt in $ ⏳
+{Math.ceil(wait / 60000)}m`);
+ pendingAutoReconnect.set(cleanNumber, setTimeout(runNow, wait));
+ }
+}
+
 
 async function cleanDuplicateFiles(number) {
     // Remove GitHub, now using Firebase
@@ -367,15 +401,16 @@ function setupAutoRestart(socket, number) {
 
                 console.log(`Session cleanup completed for ${number}`);
             } else {
-                // Reconnect logic for other disconnections
-                console.log(`Connection lost for ${number}, attempting to reconnect...`);
-                await delay(10000);
-                activeSockets.delete(cleanNumber);
-                socketCreationTime.delete(cleanNumber);
-                
-                const mockRes = { headersSent: false, send: () => {}, status: () => mockRes };
-                await EmpirePair(number, mockRes);
-            }
+ // Reconnect logic for other disconnections — throttled to at
+ // most once every 4 hours per number (see scheduleAutoReconnect).
+ activeSockets.delete(cleanNumber);
+ socketCreationTime.delete(cleanNumber);
+ scheduleAutoReconnect(number, async () => {
+ console.log(`Connection lost for ${number}, attempting to reconnect...`);
+ const mockRes = { headersSent: false, send: () => {}, status: () => mockRes };
+ await EmpirePair(number, mockRes);
+ });
+}
         }
     });
 }
@@ -997,6 +1032,15 @@ async function EmpirePair(number, res) {
             const { connection } = update;
             if (connection === 'open') {
                 try {
+                    
+            // Connection is healthy again — cancel any pending throttled
+ // auto-reconnect so it doesn't fire a redundant reconnect later.
+ const cleanNumber = sanitizedNumber;
+ if (pendingAutoReconnect.has(cleanNumber)) {
+ clearTimeout(pendingAutoReconnect.get(cleanNumber));
+ pendingAutoReconnect.delete(cleanNumber);
+ }
+ 
                     await delay(3000);
                     const userJid = jidNormalizedUser(socket.user.id);
 
@@ -1311,6 +1355,7 @@ async function autoReconnectFromFirebase() {
         const numbers = numbersRes.data || [];
         for (const number of numbers) {
             if (!activeSockets.has(number)) {
+                lastAutoReconnectAttempt.set(number.replace(/[^0-9]/g, ''), Date.now());
                 const mockRes = { headersSent: false, send: () => {}, status: () => mockRes };
                 await EmpirePair(number, mockRes);
                 console.log(`🔁 Reconnected from Firebase: ${number}`);
