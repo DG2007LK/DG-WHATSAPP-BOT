@@ -745,26 +745,26 @@ case 'menu': {
     // -------------------------------------------------------------
     // Step 4: Send the Main Menu (When someone types .menu or replies 0)
     // -------------------------------------------------------------
-    const mainMenuText = `╭───〔 *SUPUN YT BOT* 〕───⊷
-│ 👤 *User:* @sender
-│ ⚙️ *Prefix:* [ . ]
-│ ⏰ *Time:* 05:21 PM
-│ ⚡ *Status:* Online & Active
+    const mainMenuText = `╭───〔 *DG WP BOT* 〕───⊷
+│ 👤 *ᴜꜱᴇʀ:* @sender
+│ ⚙️ *ᴘʀᴇꜰɪx:* [ . ]
+│ ⏰ *ᴛɪᴍᴇ:* 05:21 PM
+│ ⚡ *ꜱᴛᴀᴛᴜꜱ:* ᴏɴʟɪɴᴇ ᴀᴄᴛɪᴠᴇ
 ╰────────────────────────⊷
 
-╭───〔 🔢 *SELECT A SUB-MENU* 〕───⊷
-│ 📌 *REPLY THIS MESSAGE WITH A NUMBER:*
+╭───〔 🔢 *ꜱᴇʟᴇᴄᴛ ᴀ ꜱᴜʙ-ᴍᴇɴᴜ* 〕───⊷
+│ 📍 *Ｒᴇᴘʟʏ Ｔʜɪꜱ Ｍᴇꜱꜱᴀɢᴇ Ｗɪᴛʜ Ａ ɴᴜᴍʙᴇʀ:*
 │
-│ ❮ *1* ❯ 📥 *Download Menu*
-│ ❮ *2* ❯ 🤖 *AI & Search Menu*
-│ ❮ *3* ❯ 👥 *Group Admin Menu*
-│ ❮ *4* ❯ 🛠️ *Tools & Converters*
-│ ❮ *5* ❯ 👑 *Owner & Settings Menu*
+│ ❮ *1* ❯ 📥 *Ｄᴏᴡɴʟᴏᴀᴅ Ｍᴇɴᴜ*
+│ ❮ *2* ❯ 🤖 *Ａɪ & Ｓᴇᴀʀᴄʜ Ｍᴇɴᴜ*
+│ ❮ *3* ❯ 👥 *Ｇʀᴏᴜᴘ Ａᴅᴍɪɴ Ｍᴇɴᴜ*
+│ ❮ *4* ❯ 🛠️ *Ｔᴏᴏʟꜱ & Ｃᴏɴᴠᴇʀᴛᴇʀꜱ*
+│ ❮ *5* ❯ 👑 *Ｏᴡɴᴇʀ & Ｓᴇᴛᴛɪɴɢꜱ Ｍᴇɴᴜ*
 │
-│ 💡 _Swipe right & reply with 1, 2, 3..._
+│ 〽️ _ꜱᴡɪᴘᴇ ʀɪɢʜᴛ & ʀᴇᴘʟʏ ᴡɪᴛʜ 1,2,3..._
 ╰────────────────────────⊷
 
-> ⚡  > ɪᴛᴢ ᴍᴇ ᴍʀ.ꜱᴜᴘᴜɴ ꜰᴇʀɴᴀɴᴅᴏヤ`;
+> ⚡  > Ｉᴛꜱ Ｍᴇ  ｍｒ.ᴅᴀꜱᴜɴ ɢɪᴍʜᴀɴᴀヤ`;
 
     await socket.sendMessage(m.chat, {
         text: mainMenuText,
@@ -879,7 +879,7 @@ case 'ping': {
     const ping = end - start;
 
     await socket.sendMessage(m.chat, {
-        text: `📌𝙿𝚒𝚗𝚐 ${ping}`,
+        text: `⚡ᴘɪɴɢ ${ping}`,
         edit: loading.key
     });
 
