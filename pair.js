@@ -33,7 +33,7 @@ const config = {
     PREFIX: '.',
     MAX_RETRIES: 3,
     GROUP_INVITE_LINK: 'https://chat.whatsapp.com/GltIUGj2JeN7d5OV10BlJx',
-    RCD_VIDEO_PATH: 'https://res.cloudinary.com/divxgmr1g/video/upload/v1790904871/vh0driji7fg0hefhotge.mp4',
+    RCD_IMAGE_PATH: 'https://res.cloudinary.com/divxgmr1g/image/upload/v1790919894/bl4blh5mr3ct4ltpa0ir.jpg',
     OTP_EXPIRY: 300000,
     OWNER_NUMBER: '+94743277981',
     ADMIN_LIST_PATH: './lib/admin.json'
