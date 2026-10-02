@@ -3,139 +3,664 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>DG WP BOT</title>
+  <title>DG WHATSAPP BOT</title>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background: black;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
+    /* ============ THEME TOKENS ============ */
+    :root{
+      --bg:#05070d;
+      --bg2:#0b1120;
+      --card:rgba(255,255,255,0.045);
+      --input-bg:rgba(255,255,255,0.04);
+      --tab-bg:rgba(255,255,255,0.05);
+      --text:#eaf6ff;
+      --muted:#8fa6bd;
+      --accent:#00e0ff;
+      --accent2:#7c4dff;
+      --border:rgba(0,224,255,0.22);
+      --shadow:0 0 28px rgba(0,224,255,0.18);
+      --danger:#ff5c7a;
+    }
+    body.light{
+      --bg:#eef4fb;
+      --bg2:#ffffff;
+      --card:rgba(255,255,255,0.78);
+      --input-bg:rgba(10,26,43,0.035);
+      --tab-bg:rgba(10,26,43,0.05);
+      --text:#0a1a2b;
+      --muted:#5a7188;
+      --accent:#0077ff;
+      --accent2:#7c4dff;
+      --border:rgba(0,119,255,0.22);
+      --shadow:0 12px 32px rgba(0,80,180,0.13);
+      --danger:#e03a58;
     }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    html,body{height:100%;}
+
+    body{
+      margin:0;
+      font-family:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, var(--bg2), transparent 70%),
+        var(--bg);
+      color:var(--text);
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
+      padding:22px 16px 44px;
+      overflow-x:hidden;
+      transition:background .35s ease, color .35s ease;
     }
 
-    .box {
-      width: 320px;
-      padding: 20px;
-      background-color: #111;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 0 15px #00f2ff;
+    /* ============ BACKGROUND ORBS ============ */
+    .bg-orbs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+    .bg-orbs span{
+      position:absolute;border-radius:50%;filter:blur(95px);opacity:.5;
+      animation:float 16s ease-in-out infinite;
+    }
+    .bg-orbs span:nth-child(1){width:330px;height:330px;background:#00e0ff;top:-90px;left:-90px;}
+    .bg-orbs span:nth-child(2){width:300px;height:300px;background:#7c4dff;bottom:-100px;right:-80px;animation-delay:-5s;}
+    .bg-orbs span:nth-child(3){width:260px;height:260px;background:#00ff9d;top:42%;left:62%;animation-delay:-9s;}
+    body.light .bg-orbs span{opacity:.26;}
+    @keyframes float{
+      0%,100%{transform:translate(0,0) scale(1);}
+      50%{transform:translate(30px,-42px) scale(1.12);}
     }
 
-    h3, h6 {
-      color: #00f2ff;
-      margin: 10px 0;
+    /* ============ VIEWS ============ */
+    .view{
+      display:none;
+      width:100%;
+      max-width:460px;
+      flex-direction:column;
+      gap:16px;
+      animation:fadeUp .45s cubic-bezier(.22,.9,.3,1);
+    }
+    .view.active{display:flex;}
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(16px);}
+      to{opacity:1;transform:none;}
     }
 
-    .input-container {
-      display: flex;
-      width: 100%;
-      margin-top: 15px;
+    /* ============ TOP BAR ============ */
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+    .brand{
+      font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:1.5px;
+      color:var(--accent);display:flex;align-items:center;gap:8px;font-size:14px;
+    }
+    .icon-btn{
+      width:42px;height:42px;border-radius:13px;
+      border:1px solid var(--border);background:var(--card);color:var(--text);
+      cursor:pointer;display:grid;place-items:center;font-size:16px;
+      transition:.25s;backdrop-filter:blur(10px);
+    }
+    .icon-btn:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-2px);}
+    .icon-btn:active{transform:scale(.94);}
+
+    /* ============ TITLE ============ */
+    .title{
+      font-family:'Orbitron',sans-serif;
+      font-size:clamp(21px,6.2vw,30px);
+      font-weight:800;
+      text-align:center;
+      margin:6px 0 0;
+      letter-spacing:2px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));
+      background-size:220% auto;
+      -webkit-background-clip:text;background-clip:text;
+      color:transparent;
+      animation:shine 4.5s linear infinite;
+    }
+    @keyframes shine{to{background-position:220% center;}}
+
+    .subtitle{
+      text-align:center;margin:-6px 0 0;font-size:12.5px;
+      letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);
     }
 
-    .input-container input,
-    .input-container button {
-      height: 3rem;
-      font-size: 1rem;
-      border: none;
-      outline: none;
-      box-sizing: border-box;
+    /* ============ VIDEO ============ */
+    .video-card{
+      position:relative;border-radius:20px;overflow:hidden;
+      border:1px solid var(--border);box-shadow:var(--shadow);background:#000;
+    }
+    .video-card video{
+      display:block;width:100%;height:auto;max-height:440px;object-fit:cover;
+    }
+    .sound-btn{
+      position:absolute;right:10px;bottom:10px;
+      display:flex;align-items:center;gap:7px;
+      padding:9px 15px;border-radius:30px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(0,0,0,.55);color:#fff;
+      font-family:inherit;font-size:12px;font-weight:600;
+      cursor:pointer;backdrop-filter:blur(10px);transition:.25s;
+    }
+    .sound-btn:hover,.sound-btn.on{
+      background:var(--accent);color:#00131a;border-color:transparent;
+    }
+    .sound-btn:active{transform:scale(.95);}
+
+    /* ============ CARD ============ */
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:18px;
+      backdrop-filter:blur(16px);
+      box-shadow:var(--shadow);
+      transition:background .35s ease, border-color .35s ease;
     }
 
-    .input-container input {
-      width: 70%;
-      border-radius: 0.8rem 0 0 0.8rem;
-      background: #e0f7ff;
-      color: #000;
-      padding-left: 1rem;
+    /* ============ BUTTONS ============ */
+    .btn{
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      width:100%;padding:15px 18px;border-radius:15px;border:none;
+      font-family:inherit;font-size:14.5px;font-weight:600;letter-spacing:.6px;
+      cursor:pointer;text-decoration:none;transition:.28s;
+    }
+    .btn i{font-size:16px;}
+    .btn.primary{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#04121c;box-shadow:0 8px 24px rgba(0,224,255,.28);
+    }
+    .btn.primary:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,224,255,.42);}
+    .btn.primary:active{transform:translateY(0) scale(.98);}
+    .btn.primary:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+
+    .btn.whatsapp{
+      background:linear-gradient(135deg,#25d366,#128c7e);
+      color:#fff;box-shadow:0 8px 24px rgba(37,211,102,.28);
+    }
+    .btn.whatsapp:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(37,211,102,.42);}
+    .btn.whatsapp:active{transform:translateY(0) scale(.98);}
+
+    /* ============ STEPS BOX ============ */
+    .steps h2{
+      font-family:'Orbitron',sans-serif;
+      font-size:13px;margin:0 0 14px;letter-spacing:1px;
+      display:flex;align-items:center;gap:9px;color:var(--accent);
+    }
+    .steps ol{
+      margin:0;padding-left:20px;
+      display:flex;flex-direction:column;gap:10px;
+    }
+    .steps li{
+      font-size:13.2px;line-height:1.65;color:var(--muted);
+      padding-left:2px;
+    }
+    .steps li b{color:var(--text);font-weight:600;}
+    .steps li code{
+      font-family:'Orbitron',monospace;font-size:11.5px;
+      background:var(--input-bg);border:1px solid var(--border);
+      padding:2px 7px;border-radius:6px;color:var(--accent);
     }
 
-    .input-container button {
-      width: 30%;
-      border-radius: 0 0.8rem 0.8rem 0;
-      background: #00bfff;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
+    /* ============ INPUT ============ */
+    .input-container{
+      display:flex;align-items:center;gap:11px;
+      background:var(--input-bg);
+      border:1.5px solid var(--border);
+      border-radius:15px;
+      padding:0 15px;
+      margin-bottom:14px;
+      transition:.25s;
+    }
+    .input-container:focus-within{
+      border-color:var(--accent);
+      box-shadow:0 0 0 4px rgba(0,224,255,.13);
+    }
+    body.light .input-container:focus-within{box-shadow:0 0 0 4px rgba(0,119,255,.13);}
+    .input-container i{color:var(--accent);font-size:16px;}
+    .input-container input{
+      flex:1;width:100%;height:54px;
+      border:none;outline:none;background:transparent;
+      color:var(--text);font-size:16px;font-family:inherit;
+      letter-spacing:.8px;font-weight:500;
+    }
+    .input-container input::placeholder{color:var(--muted);opacity:.65;font-weight:400;}
+
+    /* ============ TABS ============ */
+    .tabs{
+      display:flex;gap:6px;background:var(--tab-bg);
+      padding:5px;border-radius:15px;margin-bottom:16px;
+    }
+    .tab{
+      flex:1;padding:11px 8px;border:none;border-radius:11px;
+      background:transparent;color:var(--muted);
+      font-family:inherit;font-weight:600;font-size:13px;
+      cursor:pointer;transition:.25s;
+      display:flex;align-items:center;justify-content:center;gap:7px;
+    }
+    .tab.active{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#04121c;box-shadow:0 4px 16px rgba(0,224,255,.3);
+    }
+    .tab-panel{display:none;}
+    .tab-panel.active{display:block;animation:fadeUp .3s ease;}
+
+    /* ============ LOADER ============ */
+    .loader{
+      display:none;flex-direction:column;align-items:center;gap:13px;
+      padding:24px 0 8px;color:var(--muted);font-size:12.5px;letter-spacing:.5px;
+    }
+    .loader.show{display:flex;animation:fadeUp .3s ease;}
+    .spinner{
+      width:44px;height:44px;border-radius:50%;
+      border:3px solid rgba(0,224,255,.16);
+      border-top-color:var(--accent);
+      animation:spin .8s linear infinite;
+    }
+    body.light .spinner{border-color:rgba(0,119,255,.15);border-top-color:var(--accent);}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* ============ CODE RESULT ============ */
+    .code-card{
+      margin-top:16px;padding:18px 16px;
+      border-radius:17px;
+      border:1.5px dashed var(--border);
+      background:var(--input-bg);
+      text-align:center;
+      animation:fadeUp .4s ease;
+    }
+    .code-label{
+      display:block;font-size:11px;letter-spacing:2px;
+      text-transform:uppercase;color:var(--muted);margin-bottom:12px;
+    }
+    .code-value{
+      display:block;
+      font-family:'Orbitron',monospace;
+      font-size:clamp(20px,6.5vw,27px);
+      font-weight:800;letter-spacing:3.5px;
+      color:var(--accent);
+      word-break:break-all;
+      margin-bottom:16px;
+      text-shadow:0 0 22px rgba(0,224,255,.35);
+    }
+    .code-value.err{
+      font-size:14px;letter-spacing:.5px;
+      color:var(--danger);text-shadow:none;
+      font-family:'Poppins',sans-serif;font-weight:600;
+    }
+    .copy-btn{
+      display:inline-flex;align-items:center;gap:9px;
+      padding:12px 26px;border-radius:13px;
+      border:1.5px solid var(--accent);
+      background:transparent;color:var(--accent);
+      font-family:inherit;font-weight:600;font-size:13.5px;
+      cursor:pointer;transition:.25s;
+    }
+    .copy-btn:hover{background:var(--accent);color:#04121c;transform:translateY(-2px);}
+    .copy-btn:active{transform:scale(.96);}
+    .copy-btn.copied{
+      background:#25d366;border-color:#25d366;color:#fff;
     }
 
-    .input-container button:hover {
-      background: #00ffff;
-      color: #000;
+    /* ============ MESSAGES ============ */
+    .msg{
+      font-size:13px;font-weight:500;text-align:center;
+      margin:14px 0 0;padding:12px;border-radius:13px;
+      animation:fadeUp .3s ease;line-height:1.5;
+    }
+    .msg.error{color:var(--danger);background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.28);}
+
+    /* ============ QR ============ */
+    .qr-img{
+      width:230px;max-width:100%;display:block;
+      margin:18px auto 0;padding:12px;
+      background:#fff;border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
     }
 
-    a.centered-text {
-      color: white;
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
+    /* ============ FOOTER ============ */
+    .footer{
+      text-align:center;font-size:11.5px;color:var(--muted);
+      letter-spacing:.6px;margin:6px 0 0;
     }
+    .footer b{color:var(--accent);font-weight:600;}
   </style>
 </head>
+
 <body>
 
-  <div class="container">
-    <div class="box" id="box">
-      <div id="text">
-        <i class="fa fa-user" style="color:#00ffff;"></i>
-        <h3>DG WP BOT</h3>
-        <h6>Develop By Dasun Gimahan ✨</h6>
-        <h6>🔢 Enter your number with country code</h6>
+  <!-- Background glow -->
+  <div class="bg-orbs"><span></span><span></span><span></span></div>
 
-        <div class="input-container">
-          <input placeholder="9476xxxxxxx" type="number" id="number">
-          <button id="submit">Submit</button>
-        </div>
+  <!-- ============================================================
+       PAGE 1 : LANDING
+  ============================================================= -->
+  <section id="landing" class="view active">
 
-        <a id="waiting-message" class="centered-text" style="display: none;">Please wait a while...</a>
-        <main id="pair"></main>
-      </div>
+    <div class="topbar">
+      <div class="brand"><i class="fab fa-whatsapp"></i> DG BOT</div>
+      <button class="icon-btn" data-theme-btn title="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
     </div>
-  </div>
+
+    <h1 class="title">DG WHATSAPP BOT</h1>
+    <p class="subtitle">Fast • Secure • Reliable</p>
+
+    <!-- Video + sound toggle -->
+    <div class="video-card">
+      <video id="demoVideo"
+             src="https://res.cloudinary.com/divxgmr1g/video/upload/v1790903251/qhi6nrk55bqywjqtzmwt.mp4"
+             autoplay loop muted playsinline></video>
+      <button id="soundBtn" class="sound-btn">
+        <i class="fas fa-volume-mute"></i><span>Sound Off</span>
+      </button>
+    </div>
+
+    <!-- GET BOT PAIR -->
+    <button id="getPairBtn" class="btn primary">
+      <i class="fas fa-link"></i> GET BOT PAIR
+    </button>
+
+    <!-- Step by step -->
+    <div class="card steps">
+      <h2><i class="fas fa-list-ol"></i> HOW TO GET YOUR PAIR CODE</h2>
+      <ol>
+        <li>Tap the <b>GET BOT PAIR</b> button above.</li>
+        <li>Enter your <b>WhatsApp number with country code</b> — e.g. <code>9476XXXXXXX</code> (no + and no leading 0).</li>
+        <li>Press <b>Submit</b> and wait a few seconds while we generate your code.</li>
+        <li>Tap the <b>Copy</b> button to copy your 8-digit pairing code.</li>
+        <li>Open <b>WhatsApp</b> → <b>Settings</b> → <b>Linked Devices</b> → <b>Link a Device</b>.</li>
+        <li>Choose <b>Link with phone number</b> and paste the code.</li>
+        <li>Done! Your bot is now connected ✅</li>
+      </ol>
+    </div>
+
+    <!-- Contact owner -->
+    <a class="btn whatsapp"
+       href="https://wa.me/94743277981?text=Hi%20Dasun%2C%20I%20need%20help%20with%20the%20DG%20WhatsApp%20Bot"
+       target="_blank" rel="noopener">
+      <i class="fab fa-whatsapp"></i> CONTACT OWNER
+    </a>
+
+    <p class="footer">Developed by <b>Dasun Gimahan</b> ✨</p>
+  </section>
+
+
+  <!-- ============================================================
+       PAGE 2 : PAIR
+  ============================================================= -->
+  <section id="pairView" class="view">
+
+    <div class="topbar">
+      <button id="backBtn" class="icon-btn" title="Back"><i class="fas fa-arrow-left"></i></button>
+      <div class="brand"><i class="fas fa-link"></i> DG PAIR</div>
+      <button class="icon-btn" data-theme-btn title="Toggle theme">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+
+    <div class="card">
+      <h2 class="title" style="font-size:17px;letter-spacing:1.5px;margin-bottom:16px;">
+        LINK YOUR WHATSAPP
+      </h2>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="code"><i class="fas fa-key"></i> Pair Code</button>
+        <button class="tab" data-tab="qr"><i class="fas fa-qrcode"></i> QR Code</button>
+      </div>
+
+      <!-- Pair code panel -->
+      <div id="tab-code" class="tab-panel active">
+        <div class="input-container">
+          <i class="fab fa-whatsapp"></i>
+          <input id="number" type="tel" inputmode="numeric" autocomplete="off"
+                 placeholder="9476xxxxxxx">
+        </div>
+        <button id="submit" class="btn primary">
+          <i class="fas fa-paper-plane"></i> Submit
+        </button>
+      </div>
+
+      <!-- QR panel -->
+      <div id="tab-qr" class="tab-panel">
+        <div class="input-container">
+          <i class="fab fa-whatsapp"></i>
+          <input id="qrNumber" type="tel" inputmode="numeric" autocomplete="off"
+                 placeholder="9476xxxxxxx">
+        </div>
+        <button id="qrSubmit" class="btn primary">
+          <i class="fas fa-qrcode"></i> Generate QR
+        </button>
+        <div id="qrResult"></div>
+      </div>
+
+      <!-- Loading animation -->
+      <div id="loader" class="loader">
+        <div class="spinner"></div>
+        <span>Generating your code, please wait...</span>
+      </div>
+
+      <!-- Result -->
+      <main id="pair"></main>
+    </div>
+
+    <p class="footer">Developed by <b>Dasun Gimahan</b> ✨</p>
+  </section>
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
   <script>
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
+    /* =========================================================
+       CONFIG  (ඔබේ backend endpoints මෙතන)
+    ========================================================= */
+    const CONFIG = {
+      pairEndpoint: '/code',   // ඔයාගේ pair code endpoint එක
+      qrEndpoint:   '/qr'      // QR endpoint එක (නැත්නම් QR tab එක error පෙන්නයි)
+    };
 
-    async function Copy() {
-      let text = document.getElementById("copy").innerText;
-      let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
-      obj.innerText = "COPIED";
-      obj.style = "color:blue;font-weight:bold";
-      setTimeout(() => {
-        obj.innerText = text;
-        obj.style = "color:white;font-weight-bold";
-      }, 500);
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
+    let a = document.getElementById("pair");      // result area
+    let b = document.getElementById("submit");    // submit button
+    let c = document.getElementById("number");    // number input
+
+    const loader      = document.getElementById("loader");
+    const qrResult    = document.getElementById("qrResult");
+    const qrNumber    = document.getElementById("qrNumber");
+
+    /* =========================================================
+       THEME (Dark / Light)
+    ========================================================= */
+    function applyTheme(mode){
+      document.body.classList.toggle('light', mode === 'light');
+      try { localStorage.setItem('dg-theme', mode); } catch(e){}
+      document.querySelectorAll('[data-theme-btn] i').forEach(el => {
+        el.className = (mode === 'light') ? 'fas fa-sun' : 'fas fa-moon';
+      });
     }
+    document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyTheme(document.body.classList.contains('light') ? 'dark' : 'light');
+      });
+    });
+    let savedTheme = 'dark';
+    try { savedTheme = localStorage.getItem('dg-theme') || 'dark'; } catch(e){}
+    applyTheme(savedTheme);
+
+    /* =========================================================
+       VIEW SWITCHING
+    ========================================================= */
+    function showView(id){
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.getElementById('getPairBtn').addEventListener('click', () => showView('pairView'));
+    document.getElementById('backBtn').addEventListener('click', () => showView('landing'));
+
+    /* =========================================================
+       VIDEO SOUND TOGGLE
+    ========================================================= */
+    const video    = document.getElementById('demoVideo');
+    const soundBtn = document.getElementById('soundBtn');
+
+    soundBtn.addEventListener('click', () => {
+      video.muted = !video.muted;
+      if (!video.muted) { video.play().catch(()=>{}); }
+      soundBtn.classList.toggle('on', !video.muted);
+      soundBtn.innerHTML = video.muted
+        ? '<i class="fas fa-volume-mute"></i><span>Sound Off</span>'
+        : '<i class="fas fa-volume-up"></i><span>Sound On</span>';
+    });
+
+    /* =========================================================
+       TABS
+    ========================================================= */
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+        a.innerHTML = '';
+        loader.classList.remove('show');
+      });
+    });
+
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+    const onlyDigits = v => (v || '').replace(/[^0-9]/g, '');
+
+    function escapeHTML(str){
+      return String(str).replace(/[&<>"']/g, s => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[s]));
+    }
+
+    function showLoader(state){
+      loader.classList.toggle('show', state);
+      b.disabled = state;
+      b.innerHTML = state
+        ? '<i class="fas fa-spinner fa-spin"></i> Please wait...'
+        : '<i class="fas fa-paper-plane"></i> Submit';
+    }
+
+    /* =========================================================
+       RENDER CODE RESULT
+    ========================================================= */
+    function renderCode(code){
+      const isError = !code || code === 'Service Unavailable';
+
+      a.innerHTML = `
+        <div class="code-card">
+          <span class="code-label">${isError ? 'Something went wrong' : 'Your Pairing Code'}</span>
+          <span id="codeValue" class="code-value ${isError ? 'err' : ''}">${escapeHTML(code)}</span>
+          ${isError ? '' : `
+            <button id="copyBtn" class="copy-btn" onclick="Copy()">
+              <i class="far fa-copy"></i> Copy Code
+            </button>`}
+        </div>`;
+    }
+
+    /* =========================================================
+       COPY  (වෙනම copy button එකක්)
+    ========================================================= */
+    async function Copy(){
+      const codeEl = document.getElementById('codeValue');
+      const btn    = document.getElementById('copyBtn');
+      if (!codeEl || !btn) return;
+
+      const text = codeEl.innerText.trim();
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (err) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch(e){}
+        ta.remove();
+      }
+
+      btn.classList.add('copied');
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = '<i class="far fa-copy"></i> Copy Code';
+      }, 1600);
+    }
+
+    /* =========================================================
+       PAIR CODE SUBMIT  (endpoint එක වෙනස් කරලා නෑ)
+    ========================================================= */
+    c.addEventListener('input', () => { c.value = onlyDigits(c.value); });
 
     b.addEventListener("click", async (e) => {
       e.preventDefault();
-      if (!c.value) {
-        a.innerHTML = '<a style="color:white;font-weight:bold">Enter your WhatsApp number with Country Code</a><br><br>';
-      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<a style="color:red;font-weight:bold">Invalid Number</a><br><br>';
-      } else {
-        const number = c.value.replace(/[^0-9]/g, "");
-        c.type = "text";
-        c.value = "+" + number;
-        c.style = "color:black;font-size:20px";
-        a.innerHTML = '<a style="color:white;font-weight:bold">Please Wait...</a><br><br>';
-        let { data } = await axios(`/code?number=${number}`);
-        let code = data.code || "Service Unavailable";
-        a.innerHTML = `<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;">${code}</span></font><br><br><br>`;
+
+      const number = onlyDigits(c.value);
+
+      if (!number) {
+        a.innerHTML = '';
+        loader.classList.remove('show');
+        a.innerHTML = '<p class="msg error">Please enter your WhatsApp number with country code.</p>';
+        return;
+      }
+
+      if (number.length < 11) {
+        a.innerHTML = '<p class="msg error">Invalid number. Include the country code (e.g. 9476XXXXXXX).</p>';
+        return;
+      }
+
+      c.value = "+" + number;
+      a.innerHTML = '';
+      showLoader(true);
+
+      try {
+        const { data } = await axios(`${CONFIG.pairEndpoint}?number=${number}`);
+        const code = (data && data.code) ? data.code : "Service Unavailable";
+        renderCode(code);
+      } catch (err) {
+        renderCode("Service Unavailable");
+      } finally {
+        showLoader(false);
+      }
+    });
+
+    /* =========================================================
+       QR CODE  (optional – backend එකේ /qr තියෙනවා නම් වැඩ කරයි)
+    ========================================================= */
+    qrNumber.addEventListener('input', () => { qrNumber.value = onlyDigits(qrNumber.value); });
+
+    document.getElementById('qrSubmit').addEventListener('click', async () => {
+      const number = onlyDigits(qrNumber.value);
+
+      if (number.length < 11) {
+        qrResult.innerHTML = '<p class="msg error">Please enter a valid number with country code.</p>';
+        return;
+      }
+
+      qrResult.innerHTML = '<div class="loader show" style="padding:20px 0 4px;"><div class="spinner"></div><span>Generating QR...</span></div>';
+
+      try {
+        const { data } = await axios(`${CONFIG.qrEndpoint}?number=${number}`);
+        const qr = data.qr || data.code || data.url || '';
+
+        if (typeof qr === 'string' && (qr.startsWith('http') || qr.startsWith('data:image'))) {
+          qrResult.innerHTML = `<img class="qr-img" src="${qr}" alt="WhatsApp QR Code">`;
+        } else {
+          qrResult.innerHTML = '<p class="msg error">QR service unavailable. Please use the <b>Pair Code</b> tab instead.</p>';
+        }
+      } catch (err) {
+        qrResult.innerHTML = '<p class="msg error">QR service unavailable. Please use the <b>Pair Code</b> tab instead.</p>';
       }
     });
   </script>
