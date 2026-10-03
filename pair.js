@@ -10,6 +10,9 @@ const Jimp = require('jimp');
 const crypto = require('crypto');
 const axios = require('axios');
 const { sms, downloadMediaMessage } = require("./lib/msg");
+      const {
+  fetchJson
+  } = require("./lib/function");
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -562,6 +565,9 @@ Get Bot Menu For Type .menu`;
      }
      break;
      }
+     
+     
+     //=======================
              
              // =========================================================================
 // ⚡ ADVANCE SINGLE-CASE MENU COMMAND (Node.js & @whiskeysockets/baileys)
@@ -920,6 +926,36 @@ case 'ping': {
 
     break;
 			}
+			
+			// gemini api 
+			
+			 case 'gemini':{
+         try {
+      const query ="msg.message?.conversation || msg.message?.extendedTextMessage?.text || msg.message?.imageMessage?.caption || msg.message?.videoMessage?.caption ||";
+      
+      if (!query) {
+    await socket.sendMessage(from, { text: 'Please ask a question or provide input for the ai.' });
+    return;
+}
+
+    const response = await fetchJson(`https://supunofc.site/api/ai/chatday/chat?prompt=${encodeURIComponent(query)}&model=google%2Fgemini-3.1-flash-lite&apikey=supun-6senhznz07sw1zzfkn8yf768`);
+    
+ 
+        console.log(response);
+        await socket.sendMessage(from, {
+            text: response.result.result
+        }, { quoted: msg }    );
+         
+         }
+    catch (err) {
+        console.error('Error Gemini Ai:', err);
+        await socket.sendMessage(from, {text: '*internal Ai Error. Please Try Again.*'},
+        { quoted: msg });
+    } 
+       break;
+			 }
+				
+				//====================
 				
 				case 'deleteme': {
     await fullDeleteSession(number);
