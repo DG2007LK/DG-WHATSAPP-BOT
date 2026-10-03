@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path'); // මේක අනිවාර්යයෙන්ම එකතු කරන්න!
 const app = express();
 const __path = process.cwd();
 const PORT = process.env.PORT || 8000;
@@ -6,12 +7,12 @@ let code = require('./pair');
 
 require('events').EventEmitter.defaultMaxListeners = 500;
 
-// 1. මුලින්ම Body Parser සහ Static Middleware දාන්න
+// Body Parser සහ Static Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__path, 'public'))); // හෝ express.static('public')
+app.use(express.static(path.join(__path, 'public')));
 
-// 2. ඊටපස්සේ Routes දෙන්න
+// Routes
 app.use('/code', code);
 
 app.use('/pair', async (req, res, next) => {
