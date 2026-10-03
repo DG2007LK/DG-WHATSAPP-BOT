@@ -22,7 +22,7 @@
     "path": "^0.12.7",
     "axios": "^1.2.5",
     "moment-timezone": "^0.6.0",
-    "cheerio": "latest"
+    "cheerio": "latest",
     "body-parser": "^2.3.0"
   },
   "engines": {
